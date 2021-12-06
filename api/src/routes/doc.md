@@ -1,6 +1,6 @@
 ### documentation of routes ###
 
-``
+`
 "/u/users".get =>> obtiene todos los usuarios
 "/u/user/:id".get =>> obtiene los datos de un usuario en específico en base a su id
 "/u/register".post =>> envía el registro de un usuario, la contraseña la encripta, si no recibe info suficiente tira error, si es suficiente pero el mail o el usuario 
@@ -11,4 +11,4 @@ también ofrece un token para poder viajar por las diferentes páginas
 
 
 
-``
+`

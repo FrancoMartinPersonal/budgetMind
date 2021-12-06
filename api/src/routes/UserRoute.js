@@ -8,51 +8,65 @@ const passport = require('passport')
 
 require('dotenv').config();
 const {
-   SECRET
+    SECRET
 } = process.env;
 
-function createToken(user){
+function createToken(user) {
     return jwt.sign({
-        id:user._id,
-        email:user.email
-    },SECRET)
+        id: user._id,
+        email: user.email
+    }, SECRET)
 }
-router.get('/validate', passport.authenticate('jwt',{session:false}), (req,res,next)=> {
+router.get('/validate', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     res.send('success')
 })
 
 
 router.post('/login', async (req, res, next) => {
     try {
-        // console.log(req.body, 'body')
-        const { user, mail, password } = req.body
-        if ((user || mail) && password) {
-            let userInfoUser = await User.findOne({
-                user,
+        var { username, mail, password } = req.body
+       
+        if (mail.includes('@')||username.includes('@')) {
+            mail = username
+            username = ""
+
+        } else if (!mail.includes('@')||!username.includes('@')) {
+            username = mail
+            mail = ""
+        }
+        // console.log({username,mail,password}, 'body after transformation LOGIN')
+        if ((username.length > 1 || mail.length > 1) && password.length > 1) {
+             userInfoUser = await User.findOne({
+                user:username,
             })
             userInfoEmail = await User.findOne({
                 mail,
             })
+            // console.log(userInfoUser,'userInfoUser', userInfoEmail, 'userInfoEmail')
             if (userInfoUser || userInfoEmail) {
                 let passHash = (userInfoUser || userInfoEmail).password
                 compare = await bcryptjs.compare(password, passHash)
-                if(compare){
+                if (compare) {
 
-                    res.status(200).json({token:createToken(userInfoUser || userInfoEmail)})
-                }else{
+                    res.status(200).json({
+                        token: createToken(userInfoUser || userInfoEmail),
+                        msg: undefined
+                    })
+                } else {
                     res.status(400).send({
-                        msg:'la contraseña es incorrecta'
+                        msg: 'the password is wrong'
                     })
 
                 }
-            }else{
-                res.status(400).send({
-                    msg:'el mail o usuario son incorrectos'
+            } else {
+                res.status(404).send({
+                    msg: 'the mail or username is incorrect'
                 })
             }
         } else {
-            res.status(404).send({msg:'no hay datos!'})
+            res.status(400).send({ msg: 'there is no info' })
         }
+        userInfoUser,userInfoEmail=undefined
 
     } catch (err) {
         next(err)
@@ -74,7 +88,7 @@ router.post('/register', async (req, res, next) => {
 
             if (userRes || mailRes) {
 
-                res.send({msg:'el usuario y/o mail ya están regitrados'})
+                res.send({ msg: 'el usuario y/o mail ya están regitrados' })
             } else {
 
                 let passhash = await bcryptjs.hash(password.toString(), 10)
@@ -92,7 +106,7 @@ router.post('/register', async (req, res, next) => {
 
             }
         } else {
-            res.status(404).send({msg:'no hay datos!'})
+            res.status(404).send({ msg: 'no hay datos!' })
         }
 
 
@@ -126,7 +140,7 @@ router.get('/user/:id', async (req, res, next) => {
 
         } else {
 
-            res.status(404).send({msg:'no se ha encontrado el usuario'})
+            res.status(404).send({ msg: 'no se ha encontrado el usuario' })
 
         }
     } catch (err) {
