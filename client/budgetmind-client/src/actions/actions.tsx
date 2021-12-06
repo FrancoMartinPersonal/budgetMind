@@ -15,7 +15,9 @@ export const LoginAction =  (data:InterfaceLogin) => {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(resp => resp.json())
+        }).then(resp =>{
+           
+            return  resp.json()})
         .then(resp => {
             console.log(resp,'res of data LoginAction')
             dispatch({
@@ -23,27 +25,38 @@ export const LoginAction =  (data:InterfaceLogin) => {
                 payload:resp
             })
         }).catch((e) => {
-            console.error(e, 'error dispatch')
+            console.error(e, 'error dispatch Login')
         })
        
     }
 }
 
-export const ValidateAction = async (token:string) => {
-    console.log(token,'token in LoginAction')
-    const res =  await fetch('http://localhost:3001/u/login',{
+export const ValidateAction =  (token:string) => {
+    console.log(token,'token in ValidateAction')
+    return  (dispatch:Dispatch) => {
+     fetch('http://localhost:3001/u/validate',{
         method:'GET',
+        credentials: 'same-origin',
         headers: {
-            'Content-Type' : 'application/json',
-            'Authorization' : 'Bearer '+token
+            'Authorization' : 'Bearer '+token,
+           
         },
        
-    })
-    console.log(res,'res of token LoginAction')
-    return (dispatch:Dispatch) => {
-        dispatch({
-            type: ActionType.AUTH,
-            payload:res
+       
+    }).then((resp) =>{  
+        console.log(resp,'res of token ValidateAction')
+     return resp.json()})
+    .then(res => {
+         
+            console.log(res,'res of token ValidateAction after json')
+      
+            dispatch({
+                type: ActionType.AUTH,
+                payload:res
+            })
+        }).catch((e) => {
+            console.error(e, 'error dispatch Validate')
         })
     }
+
 }

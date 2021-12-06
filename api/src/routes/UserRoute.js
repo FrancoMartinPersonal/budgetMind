@@ -18,7 +18,8 @@ function createToken(user) {
     }, SECRET)
 }
 router.get('/validate', passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    res.send('success')
+    console.log(req.headers, 'headers')
+    res.send({msg:'success'})
 })
 
 

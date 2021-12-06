@@ -9,7 +9,8 @@ import { InterfaceLogin } from '../constants/constants';
 import { LoginAction } from '../actions/actions';
 import { RootState } from '../store/store';
 import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
-import  {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+// import { locationsAreEqual } from 'history';
 //1164579862
 
 
@@ -18,21 +19,54 @@ function LoginScreen() {
     const { LoginAction, ValidateAction } = bindActionCreators(allActions, dispatch)
     const navigate = useNavigate()
     const selectorState = useSelector((e: RootState) => e.Log)
-    
+    const token = selectorState.validate.token
+    const auth = selectorState?.auth?.msg
     const [state, setState] = useState({
         mailoruser: "",
         password: ""
 
     })
     useEffect(() => {
-        // if(selectorState.validate.token){
-
-        //     ValidateAction(selectorState.validate.token)
-        // }
+            let myToken = localStorage?.getItem("Token")
+            if(myToken){
+                console.log(myToken)
+                ValidateAction(myToken!)
+                    if (auth === "success") {
+                        console.log('sucess??')
+                        navigate('/home')
+                    } else {
+                        console.log(auth,'error auth')
+                        console.error("error validation token")
+                    }
+            
+            }
         return () => {
 
         }
-    }, [])
+        //it could be a didcomponentmount but auth works anywars because check if exists so it is trigerred and then change again but this time with auth token validated
+    }, [auth])
+
+
+    useEffect(() => {
+        if (token) {
+            localStorage.setItem('Token', token)
+            let myToken = localStorage.getItem("Token")
+            ValidateAction(myToken!)
+                if (auth === "success") {
+                    navigate('/home')
+                } else {
+                    console.log(auth,'error auth')
+                    console.error("error validation token")
+                }
+            
+
+        }
+        return () => {
+
+        }
+    }, [token])
+
+
     const onChangeInputs = (e: any) => {
         setState({
             ...state,
@@ -44,13 +78,13 @@ function LoginScreen() {
 
     const OnFormSend = (e: any) => {
         e.preventDefault()
-        navigate('/conchinchina')
+
         const { mailoruser, password } = state
 
 
         if (mailoruser.length > 1 && password.length > 1) {
 
-            console.log(state, "state before send or not")
+            //console.log(state, "state before send or not")
             if (mailoruser.includes('@')) {
                 LoginAction({
                     mail: "",
