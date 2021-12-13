@@ -10,6 +10,7 @@ import { LoginAction } from '../actions/actions';
 import { RootState } from '../store/store';
 import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 import { useNavigate } from 'react-router-dom';
+import { loadInfo, saveInfo, SaveInfoInterface } from '../components/Info';
 // import { locationsAreEqual } from 'history';
 //1164579862
 
@@ -17,29 +18,19 @@ import { useNavigate } from 'react-router-dom';
 function LoginScreen() {
     const dispatch = useDispatch()
     const { LoginAction, ValidateAction } = bindActionCreators(allActions, dispatch)
-    const navigate = useNavigate()
+   
     const selectorState = useSelector((e: RootState) => e.Log)
     const token = selectorState.validate.token
-    const auth = selectorState?.auth?.msg
+    const auth = selectorState?.auth?.auth
     const [state, setState] = useState({
         mailoruser: "",
         password: ""
 
     })
+
+
     useEffect(() => {
-            let myToken = localStorage?.getItem("Token")
-            if(myToken){
-                console.log(myToken)
-                ValidateAction(myToken!)
-                    if (auth === "success") {
-                        console.log('sucess??')
-                        navigate('/home')
-                    } else {
-                        console.log(auth,'error auth')
-                        console.error("error validation token")
-                    }
-            
-            }
+        loadInfo("token")
         return () => {
 
         }
@@ -48,19 +39,7 @@ function LoginScreen() {
 
 
     useEffect(() => {
-        if (token) {
-            localStorage.setItem('Token', token)
-            let myToken = localStorage.getItem("Token")
-            ValidateAction(myToken!)
-                if (auth === "success") {
-                    navigate('/home')
-                } else {
-                    console.log(auth,'error auth')
-                    console.error("error validation token")
-                }
-            
-
-        }
+       let info =  saveInfo({name:'token',value:token,time:30})
         return () => {
 
         }

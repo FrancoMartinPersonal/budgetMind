@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import LoginScreen from './LoginScreen';
+import { MainDiv } from '../themes/styledConstants';
 
 function LandingScreen() {
     return (
@@ -23,12 +24,7 @@ function LandingScreen() {
     )
 }
 
-const MainDiv = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-margin:10px 30px;
-`
+
 const MainLeftDiv = styled.div`
 width:50%;
 padding:10px;

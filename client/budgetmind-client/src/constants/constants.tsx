@@ -8,13 +8,18 @@ export interface InterfaceLogin {
     
         mail?:string,
         username?:string,
-        password:string
+        date:string,
+        id:string
     
 }
 export interface InterfaceAuth {
     
-    auth?:string,
-    msg?:string
+    auth:boolean,
+    info:{
+        name?:string,
+        message?:string
+    },
+    login?:InterfaceLogin
 
 }
 export interface InterfaceValidate {

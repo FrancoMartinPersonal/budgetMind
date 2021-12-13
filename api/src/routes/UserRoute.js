@@ -17,28 +17,43 @@ function createToken(user) {
         email: user.email
     }, SECRET)
 }
-router.get('/validate', passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    console.log(req.headers, 'headers')
-    res.send({msg:'success'})
+router.get('/validate', (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+        if (err || !user) {
+
+            console.log(info)
+            return res.status(400).send({
+                info,
+                auth:false
+            })
+        } else {
+            console.log(info)
+
+            let userloaded = await user
+
+            console.log(userloaded)
+            return res.send({
+                login:{
+                    user: userloaded.user,
+                    mail: userloaded.mail,
+                    date: userloaded.date,
+                    id: userloaded._id,
+                },
+                auth:true
+            })
+        }
+    })(req, res, next)
 })
 
 
 router.post('/login', async (req, res, next) => {
     try {
         var { username, mail, password } = req.body
-       
-        if (mail.includes('@')||username.includes('@')) {
-            mail = username
-            username = ""
 
-        } else if (!mail.includes('@')||!username.includes('@')) {
-            username = mail
-            mail = ""
-        }
-        // console.log({username,mail,password}, 'body after transformation LOGIN')
+        console.log({username,mail,password}, 'body after transformation LOGIN')
         if ((username.length > 1 || mail.length > 1) && password.length > 1) {
-             userInfoUser = await User.findOne({
-                user:username,
+            userInfoUser = await User.findOne({
+                user: username,
             })
             userInfoEmail = await User.findOne({
                 mail,
@@ -67,7 +82,7 @@ router.post('/login', async (req, res, next) => {
         } else {
             res.status(400).send({ msg: 'there is no info' })
         }
-        userInfoUser,userInfoEmail=undefined
+        userInfoUser, userInfoEmail = undefined
 
     } catch (err) {
         next(err)
