@@ -14,17 +14,20 @@ saves the respective cookie and return it once it is save it
     just return the info coockie name specified 
 */
 
-export function loadInfo(name: string | undefined) {
+export function loadCookie(name: string | undefined) {
 
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
-
+   //name1=jaun;max-age=30;name2=obito;max-age=32;
+   //['name1=jaun','max-age=30','name2=obito','max-age=32']
     for (var i = 0; i < ca.length; i++) {
-
         var c = ca[i];
+
         while (c.charAt(0) == ' ') c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) == 0) {
             return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }else{
+            console.error('that cookie doesnt exist')
         }
 
     }
@@ -43,12 +46,12 @@ export function loadInfo(name: string | undefined) {
     //}
     return null;
 }
-export function saveInfo({ name, value, time = 30 }: SaveInfoInterface) {
+export function saveCookie({ name, value, time = 30 }: SaveInfoInterface) {
     if (value && name) {
         var d = new Date()
         d.setTime(d.getTime() + time * 24 * 60 * 60 * 1000)
         document.cookie = `${name}=${encodeURIComponent(value)}; expires=${d.toUTCString()};`
-        return loadInfo(name)
+        return loadCookie(name)
         //ValidateAction(myToken!)
         // if (auth) {
         //     navigate('/home')
@@ -59,4 +62,7 @@ export function saveInfo({ name, value, time = 30 }: SaveInfoInterface) {
 
 
     }
+}
+export function removeCookie() {
+
 }

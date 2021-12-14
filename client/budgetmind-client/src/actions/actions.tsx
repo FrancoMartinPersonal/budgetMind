@@ -38,7 +38,7 @@ export const LoginAction = (data:LoginActionInterface) => {
     }
 }
 
-export const ValidateAction = (token: string) => {
+export const ValidateAction = (token: string|undefined|null) => {
     console.log(token, 'token in ValidateAction')
     return (dispatch: Dispatch) => {
         fetch('http://localhost:3001/u/validate', {

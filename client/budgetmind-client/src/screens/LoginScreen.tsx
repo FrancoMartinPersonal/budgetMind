@@ -1,49 +1,72 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components'
 import { colors } from '../themes/Colors'
 import { bindActionCreators, Dispatch } from 'redux';
 import { allActions } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { InterfaceLogin } from '../constants/constants';
-import { LoginAction } from '../actions/actions';
-import { RootState } from '../store/store';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
-import { useNavigate } from 'react-router-dom';
-import { loadInfo, saveInfo, SaveInfoInterface } from '../components/Info';
-// import { locationsAreEqual } from 'history';
+import { loadCookie, saveCookie, SaveInfoInterface } from '../components/Cookies';
+//import Auth from '../components/Auth';
+import { ValidateAction } from '../actions/actions';
+import useLog from '../hooks/useLog';
+import {  auth } from '../components/Auth';
 //1164579862
+
 
 
 function LoginScreen() {
     const dispatch = useDispatch()
     const { LoginAction, ValidateAction } = bindActionCreators(allActions, dispatch)
-   
-    const selectorState = useSelector((e: RootState) => e.Log)
-    const token = selectorState.validate.token
-    const auth = selectorState?.auth?.auth
+     const { tokenLog, tokenMsgLog, authLog, authInfoLog } = useLog()
+     const navigate = useNavigate()
+    // const auth = useAuth()
+    
     const [state, setState] = useState({
         mailoruser: "",
         password: ""
 
     })
 
+   
+    //  function auth(navigateStr: string | undefined = 'home') {
+        
+    //     if (authLog) {
+    //          navigate(`/${navigateStr}`)
+    //     } else if (authInfoLog) {
+    //         console.error('error in validation token :' + authInfoLog)
+    //          navigate(`/`)
+    //     }
+    // }
+
+    //const auth = useAuth()
 
     useEffect(() => {
-        loadInfo("token")
+        let cookieloaded = loadCookie("token")
+        //console.log(cookieloaded)
+        ValidateAction(cookieloaded)
+        auth({
+            auth:authLog,
+            info:authInfoLog
+        },navigate,'home')
         return () => {
 
         }
         //it could be a didcomponentmount but auth works anywars because check if exists so it is trigerred and then change again but this time with auth token validated
-    }, [auth])
+    }, [authLog])
 
 
     useEffect(() => {
-       let info =  saveInfo({name:'token',value:token,time:30})
+        let tokenRes = saveCookie({ name: 'token', value: tokenLog, time: 30 })
+        console.log(tokenRes)
+        ValidateAction(tokenRes)
+        auth({
+            auth:authLog,
+            info:authInfoLog
+        },navigate,'home')
         return () => {
 
         }
-    }, [token])
+    }, [tokenLog])
 
 
     const onChangeInputs = (e: any) => {
@@ -66,14 +89,14 @@ function LoginScreen() {
             //console.log(state, "state before send or not")
             if (mailoruser.includes('@')) {
                 LoginAction({
-                    mail: "",
-                    username: mailoruser,
+                    mail: mailoruser,
+                    username: "",
                     password
                 })
             } else {
                 LoginAction({
-                    mail: mailoruser,
-                    username: "",
+                    mail: "",
+                    username: mailoruser,
                     password
                 })
             }
@@ -88,7 +111,7 @@ function LoginScreen() {
         }
 
     }
-    console.log(selectorState)
+
     console.log(state)
 
     return (
@@ -111,7 +134,7 @@ function LoginScreen() {
                         onChange={(e) => onChangeInputs(e)} />
                 </LoginTagInputDiv>
                 <ErrorMessage>
-                    {selectorState.validate.msg}
+                    {tokenMsgLog}
                 </ErrorMessage>
                 <ButtonSend>log in</ButtonSend>
             </FormSend  >
