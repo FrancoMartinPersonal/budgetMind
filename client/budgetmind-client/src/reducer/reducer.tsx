@@ -10,7 +10,7 @@ const initialState = {
     },
     auth: {
         info: {},
-        auth: false,
+        auth: undefined,
         login: {
             date: '',
             mail: '',

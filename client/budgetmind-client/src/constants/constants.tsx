@@ -6,7 +6,7 @@ export enum ActionType {
 
 export interface InterfaceLogin {
     
-        mail?:string,
+        [mail:string]:string|undefined,
         username?:string,
         date:string,
         id:string
@@ -14,7 +14,7 @@ export interface InterfaceLogin {
 }
 export interface InterfaceAuth {
     
-    auth:boolean,
+    auth:boolean|undefined,
     info:{
         name?:string,
         message?:string
