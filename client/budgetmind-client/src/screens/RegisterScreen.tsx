@@ -23,6 +23,7 @@ function RegisterScreen() {
         password2: ""
 
     })
+    const [err, setErr] = useState<string|undefined>()
 
     
     useEffect(() => {
@@ -40,6 +41,24 @@ function RegisterScreen() {
         console.log(authLog)
     }, [authLog])
 
+    const onSendError = ( ) => {
+        let errors 
+        if (!state.mail.includes('@') ){
+             errors = 'the mail must contain @ '
+        }else if (state.user.length>19 && state.user.length<4){
+            errors = 'the username must be between 4 and 19 characters'
+            console.log(state.user.length)
+        }
+        else if (state.password !== state.password2){
+            errors= 'the password must be the same'
+        }else if (state.password.length<4 && state.password.length>30){
+            errors = 'the password must be between 6 and 30 characters'
+        }
+
+
+        setErr(errors)
+    }
+
 
     const onChangeInputs = (e: any) => {
         setState({
@@ -51,9 +70,13 @@ function RegisterScreen() {
     }
     const OnFormSend = (e:any) => {
         e.preventDefault()
+        onSendError()
+        if(!err){
+        // heres the reducer to send to back
+        }
 
     }
-
+    console.log(state)
     return (
         <MainDivRegister>
             <LoginDiv>
@@ -70,7 +93,7 @@ function RegisterScreen() {
                         <LoginTag htmlFor='email'>
                             email
                         </LoginTag>
-                        <LoginInput type='text' name='email'   onChange={(e) => onChangeInputs(e)}
+                        <LoginInput type='text' name='mail'   onChange={(e) => onChangeInputs(e)}
                         value={state.mail}/>
                         <LoginTag htmlFor='password'>
                             password
@@ -84,7 +107,7 @@ function RegisterScreen() {
                         value={state.password2} />
                     </LoginTagInputDiv>
                     <ErrorMessage>
-                        error message
+                      {err}
                     </ErrorMessage>
                     <ButtonSend>register</ButtonSend>
                 </FormSend>

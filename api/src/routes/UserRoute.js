@@ -5,7 +5,7 @@ const User = require('../models/User')
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
-
+//const fetch = require('node-fetch') 
 require('dotenv').config();
 const {
     SECRET
@@ -17,6 +17,45 @@ function createToken(user) {
         email: user.email
     }, SECRET)
 }
+
+async function  loginFun (req,res){
+    var { user, mail, password } = req.body
+
+    console.log({ user, mail, password }, 'body after transformation LOGIN')
+    if ((user.length > 1 || mail.length > 1) && password.length > 1) {
+        userInfoUser = await User.findOne({
+            user,
+        })
+        userInfoEmail = await User.findOne({
+            mail,
+        })
+        // console.log(userInfoUser,'userInfoUser', userInfoEmail, 'userInfoEmail')
+        if (userInfoUser || userInfoEmail) {
+            let passHash = (userInfoUser || userInfoEmail).password
+            compare = await bcryptjs.compare(password, passHash)
+            if (compare) {
+
+                res.status(200).json({
+                    token: createToken(userInfoUser || userInfoEmail),
+                    msg: undefined
+                })
+            } else {
+                res.status(400).send({
+                    msg: 'the password is wrong'
+                })
+
+            }
+        } else {
+            res.status(404).send({
+                msg: 'the mail or username is incorrect'
+            })
+        }
+    } else {
+        res.status(400).send({ msg: 'there is no info' })
+    }
+    userInfoUser, userInfoEmail = undefined
+}
+
 router.get('/validate', (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
         if (err || !user) {
@@ -24,7 +63,7 @@ router.get('/validate', (req, res, next) => {
             console.log(info)
             return res.status(400).send({
                 info,
-                auth:false
+                auth: false
             })
         } else {
             console.log(info)
@@ -33,13 +72,13 @@ router.get('/validate', (req, res, next) => {
 
             console.log(userloaded)
             return res.send({
-                login:{
+                login: {
                     user: userloaded.user,
                     mail: userloaded.mail,
                     date: userloaded.date,
                     id: userloaded._id,
                 },
-                auth:true
+                auth: true
             })
         }
     })(req, res, next)
@@ -48,41 +87,7 @@ router.get('/validate', (req, res, next) => {
 
 router.post('/login', async (req, res, next) => {
     try {
-        var { username, mail, password } = req.body
-
-        console.log({username,mail,password}, 'body after transformation LOGIN')
-        if ((username.length > 1 || mail.length > 1) && password.length > 1) {
-            userInfoUser = await User.findOne({
-                user: username,
-            })
-            userInfoEmail = await User.findOne({
-                mail,
-            })
-            // console.log(userInfoUser,'userInfoUser', userInfoEmail, 'userInfoEmail')
-            if (userInfoUser || userInfoEmail) {
-                let passHash = (userInfoUser || userInfoEmail).password
-                compare = await bcryptjs.compare(password, passHash)
-                if (compare) {
-
-                    res.status(200).json({
-                        token: createToken(userInfoUser || userInfoEmail),
-                        msg: undefined
-                    })
-                } else {
-                    res.status(400).send({
-                        msg: 'the password is wrong'
-                    })
-
-                }
-            } else {
-                res.status(404).send({
-                    msg: 'the mail or username is incorrect'
-                })
-            }
-        } else {
-            res.status(400).send({ msg: 'there is no info' })
-        }
-        userInfoUser, userInfoEmail = undefined
+      loginFun(req,res)
 
     } catch (err) {
         next(err)
@@ -93,8 +98,8 @@ router.post('/register', async (req, res, next) => {
     try {
 
         console.log(req.body)
-        const { fullname, user, mail, password } = req.body
-        if (fullname && user && mail && password) {
+        const { user, mail, password } = req.body
+        if (user && mail && password) {
             const userRes = await User.findOne({
                 user
             })
@@ -102,27 +107,45 @@ router.post('/register', async (req, res, next) => {
                 mail
             })
 
-            if (userRes || mailRes) {
+            if (userRes) {
 
-                res.send({ msg: 'el usuario y/o mail ya están regitrados' })
-            } else {
+                res.send( res.status(404).send({
+                    info: {
+                        message:'the user is already register'
+                    }
+                }))
+
+            } else if (mailRes) {
+                res.send( res.status(404).send({
+                    info: {
+                        message:'the mail is already register'
+                    }
+                }))
+            }
+            else {
 
                 let passhash = await bcryptjs.hash(password.toString(), 10)
 
                 const usera = new User({
-                    name: fullname,
                     user: user,
                     mail: mail,
                     password: passhash
                 })
                 console.log(passhash)
                 const userSaved = await usera.save()
-                res.send(userSaved)
+                console.log(userSaved)
+                loginFun(req,res)
+                //compare = await bcryptjs.compare(password,userSaved.password)
 
+                
 
             }
         } else {
-            res.status(404).send({ msg: 'no hay datos!' })
+            res.status(404).send({
+                info: {
+                    message:'theres no data'
+                }
+            })
         }
 
 
@@ -156,7 +179,7 @@ router.get('/user/:id', async (req, res, next) => {
 
         } else {
 
-            res.status(404).send({ msg: 'no se ha encontrado el usuario' })
+            res.status(404).send({ msg: 'user not found' })
 
         }
     } catch (err) {

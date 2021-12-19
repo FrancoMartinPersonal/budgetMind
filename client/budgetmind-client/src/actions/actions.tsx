@@ -6,7 +6,7 @@ import { ActionType, InterfaceLogin, InterfaceValidate, InterfaceAuth } from '..
 interface LoginActionInterface {
     password: string,
     mail: string,
-    username: string
+    user: string
 }
 
 export const LoginAction = (data:LoginActionInterface) => {
@@ -67,4 +67,33 @@ export const ValidateAction = (token: string|undefined|null) => {
             })
     }
 
+}
+
+export const RegisterAction = (data:LoginActionInterface) => {
+    let stringified = JSON.stringify(data)
+    console.log(stringified, 'data in RegisterAction')
+
+    return (dispatch: Dispatch) => {
+        fetch('http://localhost:3001/u/register', {
+            method: 'POST',
+            body: stringified,
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(resp => {
+
+            return resp.json()
+        })
+            .then(resp => {
+                console.log(resp, 'res of data RegisterAction')
+                dispatch({
+                    type: ActionType.REGISTER,
+                    payload: resp
+                })
+            }).catch((e) => {
+                console.error(e, 'error dispatch Register')
+            })
+
+    }
 }

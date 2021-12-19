@@ -4,7 +4,7 @@ const {Schema, SchemaTypes,model} = require('mongoose')
 
 
 const userSchema = new Schema ({
-    fullName :String,//string
+   
     user : {
         type:String,
         unique:true

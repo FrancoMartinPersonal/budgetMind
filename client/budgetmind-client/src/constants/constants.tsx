@@ -1,7 +1,8 @@
 export enum ActionType {
     LOGIN =  'login',
     VALIDATE = 'validate',
-    AUTH = 'auth'
+    AUTH = 'auth',
+    REGISTER = 'register'
 }
 
 export interface InterfaceLogin {
@@ -21,6 +22,9 @@ export interface InterfaceAuth {
     },
     login?:InterfaceLogin
 
+}
+export interface InterfaceRegister {
+    
 }
 export interface InterfaceValidate {
     token?:string;
