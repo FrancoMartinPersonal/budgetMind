@@ -52,7 +52,7 @@ function LoginScreen() {
     const OnFormSend = (e: any) => {
         e.preventDefault()
 
-        const { mailoruser, password } = state
+        const { mailoruser, password } = state;
 
 
         if (mailoruser.length > 1 && password.length > 1) {
@@ -61,13 +61,13 @@ function LoginScreen() {
             if (mailoruser.includes('@')) {
                 LoginAction({
                     mail: mailoruser,
-                    username: "",
+                    user: "",
                     password
                 })
             } else {
                 LoginAction({
                     mail: "",
-                    username: mailoruser,
+                    user: mailoruser,
                     password
                 })
             }

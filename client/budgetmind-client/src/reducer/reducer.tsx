@@ -46,7 +46,8 @@ export default function reducer(state: StateInterface = initialState, action: Ac
             }
             case ActionType.REGISTER:
                 return {
-                    
+                    ...state,
+                    validate:action.payload
                 }
 
         default: return state

@@ -18,7 +18,7 @@ function createToken(user) {
     }, SECRET)
 }
 
-async function  loginFun (req,res){
+async function loginFun(req, res) {
     var { user, mail, password } = req.body
 
     console.log({ user, mail, password }, 'body after transformation LOGIN')
@@ -87,7 +87,7 @@ router.get('/validate', (req, res, next) => {
 
 router.post('/login', async (req, res, next) => {
     try {
-      loginFun(req,res)
+        loginFun(req, res)
 
     } catch (err) {
         next(err)
@@ -109,18 +109,18 @@ router.post('/register', async (req, res, next) => {
 
             if (userRes) {
 
-                res.send( res.status(404).send({
-                    info: {
-                        message:'the user is already register'
-                    }
-                }))
+              res.status(404).send({
+
+                    msg: 'the user is already register'
+
+                })
 
             } else if (mailRes) {
-                res.send( res.status(404).send({
-                    info: {
-                        message:'the mail is already register'
-                    }
-                }))
+             res.status(404).send({
+
+                    msg: 'the mail is already register'
+
+                })
             }
             else {
 
@@ -134,17 +134,17 @@ router.post('/register', async (req, res, next) => {
                 console.log(passhash)
                 const userSaved = await usera.save()
                 console.log(userSaved)
-                loginFun(req,res)
+                loginFun(req, res)
                 //compare = await bcryptjs.compare(password,userSaved.password)
 
-                
+
 
             }
         } else {
             res.status(404).send({
-                info: {
-                    message:'theres no data'
-                }
+
+                msg: 'theres no data'
+
             })
         }
 

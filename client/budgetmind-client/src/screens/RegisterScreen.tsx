@@ -4,7 +4,7 @@ import { authRedirect } from '../components/Auth';
 import useLog from '../hooks/useLog';
 import { ButtonSend, ErrorMessage, FormSend, LoginDiv, LoginInput, LoginMainText, LoginTag, LoginTagInputDiv, MainDiv, RegisterText, RegisterDiv, RegisterLink } from '../themes/styledConstants';
 import { useNavigate } from 'react-router-dom';
-import { loadCookie } from '../components/Cookies';
+import { loadCookie, saveCookie } from '../components/Cookies';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { allActions } from '../actions';
@@ -15,7 +15,7 @@ function RegisterScreen() {
     const navigate = useNavigate()
     let tokenLoaded = loadCookie('token')
     const dispatch = useDispatch()
-    const { ValidateAction } = bindActionCreators(allActions, dispatch)
+    const { ValidateAction,RegisterAction } = bindActionCreators(allActions, dispatch)
     const [state, setState] = useState({
         user: "",
         mail: "",
@@ -35,11 +35,24 @@ function RegisterScreen() {
     }, [])
     useEffect(() => {
         if (authLog) {
-            alert("you're already login, log out to register")
+            alert("you're already login, log out if you want to register")
             navigate("/")
         }
         console.log(authLog)
     }, [authLog])
+    useEffect(() => {
+        let tokenRes = saveCookie({ name: 'token', value: tokenLog, time: 30 })
+        console.log(tokenRes)
+        ValidateAction(tokenRes)
+        if(tokenMsgLog){
+            setErr(tokenMsgLog)
+        }
+    }, [tokenLog])
+    useEffect(() => {
+        if(tokenMsgLog){
+            setErr(tokenMsgLog)
+        }
+    }, [tokenMsgLog])
 
     const onSendError = ( ) => {
         let errors 
@@ -69,10 +82,16 @@ function RegisterScreen() {
 
     }
     const OnFormSend = (e:any) => {
+        setErr(undefined)
         e.preventDefault()
         onSendError()
         if(!err){
         // heres the reducer to send to back
+            RegisterAction({
+                user:state.user,
+                mail:state.mail,
+                password:state.password
+            })
         }
 
     }

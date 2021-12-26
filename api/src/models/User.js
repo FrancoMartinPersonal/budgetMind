@@ -18,8 +18,10 @@ const userSchema = new Schema ({
         type:Date,
         default: new Date(),
     },
-    password: String
-    
+    password: String,
+    concepts:[{type:Schema.Types.ObjectId,
+         ref:'Concept'}]
+    //to many
 
 })
 

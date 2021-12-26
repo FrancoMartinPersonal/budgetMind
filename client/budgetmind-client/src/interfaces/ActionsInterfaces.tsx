@@ -17,7 +17,7 @@ interface Auth {
 }
 interface Register {
      type:ActionType.REGISTER,
-     payload:InterfaceAuth
+     payload:InterfaceValidate
 }
 
 export type ActionInterfaces = Validate | Auth | Register
