@@ -28,22 +28,44 @@ export default function HomeScreen() {
                     </WelcomeH5>
                 </WelcomeDiv>
                 <MiddleDiv>
-                <CreateForm>
-                    <CreateDiv>
-                        <CreateInput type="text" />
-                        <CreateInput type="number" />
-                        <CreateInput type="date" />
-                        <select name="type">
-                            <option value="+">+</option>
-                            <option value="-">-</option>
-                        </select>
+                    <CreateForm>
+                        <CreateDiv>
+                            <CreateInput type="text" />
+                            <CreateInput type="number" />
+                            <CreateInput type="date" />
+                            <select name="type">
+                                <option value="+">+</option>
+                                <option value="-">-</option>
+                            </select>
 
-                    </CreateDiv>
-                    <CreateSend>
-                        enviar
-                    </CreateSend>
+                        </CreateDiv>
+                        <CreateSend>
+                            enviar
+                        </CreateSend>
 
-                </CreateForm>
+                    </CreateForm>
+                    <ListDiv>
+                        <ListRowDiv>
+
+                            <ConceptH6>
+                                concept
+                            </ConceptH6>
+                            <AmountH6 theme={"green"}>
+                                +500
+                            </AmountH6>
+                        </ListRowDiv>
+                        <ListRowDiv>
+
+                            <ConceptH6>
+                                concept2
+                            </ConceptH6>
+                            <AmountH6 theme={"red"}>
+                                -356
+                            </AmountH6>
+                        </ListRowDiv>
+
+                    </ListDiv>
+
                 </MiddleDiv>
                 <ListDiv>
                     <ListRowDiv>
@@ -51,16 +73,16 @@ export default function HomeScreen() {
                             concept
                         </ConceptH6>
                         <AmountNetoH6 theme={"green"}>
-                            +500
+                            500
                         </AmountNetoH6>
                     </ListRowDiv>
                     <ListRowDiv>
 
                         <ConceptH6>
-                            concept
+                            concept2
                         </ConceptH6>
                         <AmountNetoH6 theme={'red'}>
-                            -500
+                            900
                         </AmountNetoH6>
                     </ListRowDiv>
 
@@ -83,6 +105,7 @@ const GeneralDiv = styled.div`
 const ListDiv = styled.div`
  border:1px solid black;
  padding:10px;
+ height:fit-content;
  display:flex;
 flex-direction:column;
 `
@@ -108,6 +131,7 @@ const AmountNetoH6 = styled.p`
 `
 const WelcomeDiv = styled.div`
  padding:10px;
+ height:fit-content;
  border:1px solid black;
 `
 
@@ -116,10 +140,11 @@ const WelcomeH5 = styled.h5`
     font-size:25px;
     text-align:center;
 `
-const MiddleDiv = styled.div `
+const MiddleDiv = styled.div`
 padding:10px;
 display:flex;
 justify-content:center;
+flex-direction:column;
 `
 const AmountH6 = styled.p`
     color:${props => props.theme};

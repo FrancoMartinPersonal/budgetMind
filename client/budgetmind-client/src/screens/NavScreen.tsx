@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { colors } from '../themes/Colors'
+import SessionScreen from './SessionScreen';
 
 
 
 function NavScreen() {
     return (
         <MainNav>
-            
+            <SessionScreen/>
         </MainNav>
     )
 }
