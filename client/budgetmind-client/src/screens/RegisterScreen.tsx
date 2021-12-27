@@ -8,6 +8,7 @@ import { loadCookie, saveCookie } from '../components/Cookies';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { allActions } from '../actions';
+import { onSendErrorRegister } from '../components/ErrorManager';
 
 
 function RegisterScreen() {
@@ -54,23 +55,7 @@ function RegisterScreen() {
         }
     }, [tokenMsgLog])
 
-    const onSendError = ( ) => {
-        let errors 
-        if (!state.mail.includes('@') ){
-             errors = 'the mail must contain @ '
-        }else if (state.user.length>19 && state.user.length<4){
-            errors = 'the username must be between 4 and 19 characters'
-            console.log(state.user.length)
-        }
-        else if (state.password !== state.password2){
-            errors= 'the password must be the same'
-        }else if (state.password.length<4 && state.password.length>30){
-            errors = 'the password must be between 6 and 30 characters'
-        }
-
-
-        setErr(errors)
-    }
+    
 
 
     const onChangeInputs = (e: any) => {
@@ -84,7 +69,7 @@ function RegisterScreen() {
     const OnFormSend = (e:any) => {
         setErr(undefined)
         e.preventDefault()
-        onSendError()
+        onSendErrorRegister(state,setErr)
         if(!err){
         // heres the reducer to send to back
             RegisterAction({
