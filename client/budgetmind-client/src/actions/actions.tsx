@@ -1,6 +1,7 @@
 import { ActionInterfaces } from '../interfaces/ActionsInterfaces';
 import { Dispatch } from 'redux';
 import { ActionType, InterfaceLogin, InterfaceValidate, InterfaceAuth } from '../constants/constants';
+import { displayPartsToString } from 'typescript';
 
 
 interface LoginActionInterface {
@@ -37,7 +38,31 @@ export const LoginAction = (data:LoginActionInterface) => {
 
     }
 }
-
+export const  LogoutAction = () => {
+    //this action clean the reducer 
+    return(dispatch:Dispatch) => {
+        dispatch({
+            type:ActionType.VALIDATE,
+            payload:{
+                token:'',
+                msg:undefined
+            }
+        })
+        dispatch({
+          type:ActionType.AUTH,
+          payload:{
+            info: {},
+            auth: false,
+            login: {
+                date: '',
+                mail: '',
+                id: '',
+                user: ''
+            }
+          }  
+        })
+    }
+}
 export const ValidateAction = (token: string|undefined|null) => {
     console.log(token, 'token in ValidateAction')
     return (dispatch: Dispatch) => {
