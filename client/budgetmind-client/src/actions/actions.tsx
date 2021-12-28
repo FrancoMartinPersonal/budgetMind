@@ -122,3 +122,23 @@ export const RegisterAction = (data:LoginActionInterface) => {
 
     }
 }
+
+
+export const CheckListAction = (token:string|undefined|null) => {
+return (dispatch:Dispatch) => {
+    fetch('http://localhost:3001/concept/create',{
+        method:'GET',
+        mode:'cors',
+        headers:{
+            'Authorization': 'Bearer ' + token,
+        }
+    }).then((res)=> {
+        return res.json()
+    }).then(res => {
+        dispatch({
+            type:ActionType.LIST,
+            payload:res
+        })
+    })
+}
+}

@@ -8,12 +8,17 @@ import { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
 import { MainDiv } from '../themes/styledConstants';
 import useLog from '../hooks/useLog';
+import { loadCookie } from '../components/Cookies';
+import { CheckListAction } from '../actions/actions';
 
 export default function HomeScreen() {
     const { authILoginLog } = useLog()
+    const dispatch = useDispatch()
+    const { CheckListAction } = bindActionCreators(allActions, dispatch)
+    let cookieLoaded = loadCookie('token')
     useEffect(() => {
         //in this instance, we already have a token. we need to bring it to us with an endpoint
-
+        CheckListAction(cookieLoaded)
     }, [])
     console.log(authILoginLog)
     return (

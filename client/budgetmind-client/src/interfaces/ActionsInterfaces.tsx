@@ -1,4 +1,4 @@
-import { ActionType, InterfaceAuth, InterfaceLogin, InterfaceValidate } from '../constants/constants';
+import { ActionType, InterfaceAuth, InterfaceLogin, InterfaceValidate, InterfaceList } from '../constants/constants';
 
 // interface Login {
 //     type:ActionType.LOGIN,
@@ -7,17 +7,23 @@ import { ActionType, InterfaceAuth, InterfaceLogin, InterfaceValidate } from '..
 
 
 interface Validate {
-    type:ActionType.VALIDATE,
-    payload:InterfaceValidate
-    
+    type: ActionType.VALIDATE,
+    payload: InterfaceValidate
+
 }
 interface Auth {
-    type:ActionType.AUTH,
-    payload:InterfaceAuth
+    type: ActionType.AUTH,
+    payload: InterfaceAuth
 }
 interface Register {
-     type:ActionType.REGISTER,
-     payload:InterfaceValidate
+    type: ActionType.REGISTER,
+    payload: InterfaceValidate
 }
 
-export type ActionInterfaces = Validate | Auth | Register
+interface List {
+    type: ActionType.LIST,
+    payload: InterfaceList
+}
+
+
+export type ActionInterfaces = Validate | Auth | Register | List
