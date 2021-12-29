@@ -126,7 +126,7 @@ export const RegisterAction = (data:LoginActionInterface) => {
 
 export const CheckListAction = (token:string|undefined|null) => {
 return (dispatch:Dispatch) => {
-    fetch('http://localhost:3001/concept/create',{
+    fetch('http://localhost:3001/concept/check',{
         method:'GET',
         mode:'cors',
         headers:{
@@ -135,6 +135,7 @@ return (dispatch:Dispatch) => {
     }).then((res)=> {
         return res.json()
     }).then(res => {
+        console.log(res)
         dispatch({
             type:ActionType.LIST,
             payload:res

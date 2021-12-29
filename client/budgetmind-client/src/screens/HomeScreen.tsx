@@ -12,7 +12,7 @@ import { loadCookie } from '../components/Cookies';
 import { CheckListAction } from '../actions/actions';
 
 export default function HomeScreen() {
-    const { authILoginLog } = useLog()
+    const { authILoginLog,listInfo } = useLog()
     const dispatch = useDispatch()
     const { CheckListAction } = bindActionCreators(allActions, dispatch)
     let cookieLoaded = loadCookie('token')
@@ -73,15 +73,19 @@ export default function HomeScreen() {
 
                 </MiddleDiv>
                 <ListDiv>
-                    <ListRowDiv>
+                    {listInfo.map((e:any) => {
+                    return(<ListRowDiv>
+                       
                         <ConceptH6>
-                            concept
+                            {e.concept}
                         </ConceptH6>
-                        <AmountNetoH6 theme={"green"}>
-                            500
+                        <AmountNetoH6 >
+                            {e.amount}
                         </AmountNetoH6>
-                    </ListRowDiv>
-                    <ListRowDiv>
+                        </ListRowDiv>)
+                       
+                    })}
+                    {/* <ListRowDiv>
 
                         <ConceptH6>
                             concept2
@@ -89,7 +93,7 @@ export default function HomeScreen() {
                         <AmountNetoH6 theme={'red'}>
                             900
                         </AmountNetoH6>
-                    </ListRowDiv>
+                    </ListRowDiv> */}
 
                 </ListDiv>
             </GeneralDiv>
@@ -101,9 +105,9 @@ const GeneralDiv = styled.div`
  justify-content:space-around;
  width:100%;
  @media (max-width: 768px) {
-    flex-direction: column;
-  }
- //flex-direction:row;
+     flex-direction: column;
+    }
+    //flex-direction:row;
 `
 
 

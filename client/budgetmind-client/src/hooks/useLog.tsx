@@ -11,14 +11,15 @@ function useLog () {
     const authILoginLog = selectorState?.auth!.login
     const tokenLog = selectorState?.validate!.token
     const tokenMsgLog = selectorState?.validate!.msg
-    const listInfo = selectorState.list
+    const listInfo = selectorState.list.concepts
     
     return {
         authLog,
         authInfoLog,
         authILoginLog,
         tokenLog,
-        tokenMsgLog
+        tokenMsgLog,
+        listInfo
     }
 }
 export default useLog

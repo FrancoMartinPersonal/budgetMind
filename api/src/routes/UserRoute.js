@@ -58,28 +58,33 @@ async function loginFun(req, res) {
 
 router.get('/validate', (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
-        if (err || !user) {
+        try{
 
-            console.log(info)
-            return res.status(400).send({
-                info,
-                auth: false
-            })
-        } else {
-            console.log(info)
-
-            let userloaded = await user
-
-            console.log(userloaded)
-            return res.send({
-                login: {
-                    user: userloaded.user,
-                    mail: userloaded.mail,
-                    date: userloaded.date,
-                    id: userloaded._id,
-                },
-                auth: true
-            })
+            if (err || !user) {
+    
+                console.log(info)
+                return res.status(400).send({
+                    info,
+                    auth: false
+                })
+            } else {
+                console.log(info)
+    
+                let userloaded = await user
+    
+                console.log(userloaded)
+                return res.send({
+                    login: {
+                        user: userloaded.user,
+                        mail: userloaded.mail,
+                        date: userloaded.date,
+                        id: userloaded._id,
+                    },
+                    auth: true
+                })
+            }
+        }catch(err){
+            next(err)
         }
     })(req, res, next)
 })
