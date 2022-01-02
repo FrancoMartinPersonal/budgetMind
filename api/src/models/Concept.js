@@ -13,7 +13,7 @@ const conceptSchema = new Schema ({
     },
     date:{
         type:Date,
-        default: new Date()
+        //default: new Date()
     },
     user:{type:Schema.Types.ObjectId,
         ref:'User'}

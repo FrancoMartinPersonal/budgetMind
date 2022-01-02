@@ -3,7 +3,8 @@ export enum ActionType {
     VALIDATE = 'validate',
     AUTH = 'auth',
     REGISTER = 'register',
-    LIST = 'list'
+    LIST = 'list',
+    CREATE ='create'
 }
 
 export interface InterfaceLogin {
@@ -45,8 +46,9 @@ export interface InterfaceAuth {
     login?:InterfaceLogin| undefined
 
 }
-export interface InterfaceRegister {
-    
+export interface InterfaceCreate {
+    msg:string | undefined,
+    err:boolean | undefined;
 }
 export interface InterfaceValidate {
     token?:string| undefined;

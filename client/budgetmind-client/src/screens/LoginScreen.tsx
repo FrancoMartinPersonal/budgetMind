@@ -18,7 +18,7 @@ import { ButtonSend, ErrorMessage, FormSend, LoginDiv, LoginInput, LoginMainText
 
 function LoginScreen() {
     const dispatch = useDispatch()
-    const { LoginAction, ValidateAction } = bindActionCreators(allActions, dispatch)
+    const { LoginAction } = bindActionCreators(allActions, dispatch)
     const { tokenLog, tokenMsgLog, authLog, authInfoLog, authILoginLog } = useLog()
     const navigate = useNavigate()
     // const auth = useAuth()
@@ -30,15 +30,7 @@ function LoginScreen() {
     })
 
 
-    useEffect(() => {
-        let tokenRes = saveCookie({ name: 'token', value: tokenLog, time: 30 })
-        console.log(tokenRes)
-        ValidateAction(tokenRes)
-
-        return () => {
-
-        }
-    }, [tokenLog])
+    
 
     const onChangeInputs = (e: any) => {
         setState({

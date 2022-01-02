@@ -12,7 +12,7 @@ router.post('/create', (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
-            const { concept, amount } = req.body
+            const { concept, amount, date,type  } = req.body
             console.log(req.body, 'body')
             if (err || !user) {
 
@@ -21,13 +21,15 @@ router.post('/create', (req, res, next) => {
                     info,
                 })
             } else {
-                if (concept && amount) {
-
+                if (concept && amount && date && type) {
+                    let amountSum = type + amount;
+                    console.log(amountSum)
                     let userloaded = await user;
                     const conceptCreated = new Concept({
                         concept,
-                        amount,
-                        user: userloaded._id
+                        amount: amountSum,
+                        user: userloaded._id,
+                        date
 
                     })
                     const conceptSaved = await conceptCreated.save()
@@ -38,12 +40,22 @@ router.post('/create', (req, res, next) => {
                         conceptSaved._id
                     ]
                     const newUpgradeUser = await upgradeUser.save()
-                    return res.send({conceptSaved, newUpgradeUser})
+                    if(newUpgradeUser){
+                        
+                        return res.send({msg:"save it sucessfully!",err:false })
+                    }else{
+                        return res.status(400).send(
+                            {msg:"a problem was ocurred trying to save in database",
+                            err:true 
+                        })
+
+                    }
                 }else {
                     return res.status(400).send({
-                        info:{
-                            message:"there's no enough data"
-                        }
+                        
+                            msg:"there's no enough data",
+                            err:true,
+                        
                     })
                 }
             }

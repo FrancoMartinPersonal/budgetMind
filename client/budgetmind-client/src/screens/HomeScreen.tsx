@@ -10,17 +10,61 @@ import { MainDiv } from '../themes/styledConstants';
 import useLog from '../hooks/useLog';
 import { loadCookie } from '../components/Cookies';
 import { CheckListAction } from '../actions/actions';
+import { createAction } from '@reduxjs/toolkit';
+
+interface ConceptSendInterface {
+    concept:string;
+    amount:number;
+    dateISO:any;
+    type:"+"|"-";
+}
 
 export default function HomeScreen() {
-    const { authILoginLog,listInfo } = useLog()
+    const { authILoginLog,listInfo,createErr,createInfo } = useLog()
     const dispatch = useDispatch()
-    const { CheckListAction } = bindActionCreators(allActions, dispatch)
+    const { CheckListAction,ValidateAction,CreateAction } = bindActionCreators(allActions, dispatch)
     let cookieLoaded = loadCookie('token')
+    const [sendCon,setSendCon] = useState<ConceptSendInterface>({
+        concept : "",
+        amount:0,
+        dateISO: "",
+        type: "+"
+
+    })
+    useEffect(() => {
+        //in this instance, we already have a token. we need to bring it to us with an endpoint
+        ValidateAction(cookieLoaded)
+        CheckListAction(cookieLoaded)
+    }, [])
     useEffect(() => {
         //in this instance, we already have a token. we need to bring it to us with an endpoint
         CheckListAction(cookieLoaded)
-    }, [])
-    console.log(authILoginLog)
+    }, [createErr])
+
+    const onSubmitSendConcepts = (e:any) => {
+        e.preventDefault()
+        //make a err control
+        let createToSend = {
+            concept:sendCon.concept,
+            amount:sendCon.amount,
+            date: new Date (sendCon.dateISO),
+            type: sendCon.type
+        }
+        console.log(createToSend,'create to send')
+        CreateAction(cookieLoaded, createToSend)
+    }
+    const onChangeSendConcepts = (e:any) => {
+        console.log(e.target.name)
+        console.log(e.target.value)
+        let name = e.target.name
+        
+        setSendCon({
+            ...sendCon,
+            [name] : e.target.value
+        })
+    }
+
+    console.log( new Date (sendCon.dateISO))
     return (
         <MainDiv>
             <GeneralDiv>
@@ -33,12 +77,16 @@ export default function HomeScreen() {
                     </WelcomeH5>
                 </WelcomeDiv>
                 <MiddleDiv>
-                    <CreateForm>
+                    <CreateForm onSubmit={onSubmitSendConcepts}>
                         <CreateDiv>
-                            <CreateInput type="text" />
-                            <CreateInput type="number" />
-                            <CreateInput type="date" />
-                            <select name="type">
+                            <CreateInput type="text"  name="concept" 
+                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.concept}/>
+                            <CreateInput type="number"  name="amount" 
+                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.amount}/>
+                            <CreateInput type="date" name="dateISO" 
+                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.dateISO} />
+                            <select name="type" 
+                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.type} >
                                 <option value="+">+</option>
                                 <option value="-">-</option>
                             </select>
@@ -48,7 +96,7 @@ export default function HomeScreen() {
                             enviar
                         </CreateSend>
 
-                    </CreateForm>
+                    </CreateForm >
                     <ListDiv>
                         <ListRowDiv>
 
@@ -73,7 +121,7 @@ export default function HomeScreen() {
 
                 </MiddleDiv>
                 <ListDiv>
-                    {listInfo.map((e:any) => {
+                    {listInfo?.map((e:any) => {
                     return(<ListRowDiv>
                        
                         <ConceptH6>

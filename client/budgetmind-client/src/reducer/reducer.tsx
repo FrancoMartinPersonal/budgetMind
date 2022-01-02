@@ -1,4 +1,4 @@
-import { ActionType, InterfaceLogin, InterfaceValidate, InterfaceAuth, InterfaceConcept } from '../constants/constants';
+import { ActionType, InterfaceLogin, InterfaceValidate, InterfaceAuth, InterfaceConcept, InterfaceCreate } from '../constants/constants';
 import { ActionInterfaces } from '../interfaces/ActionsInterfaces';
 
 const initialState = {
@@ -20,6 +20,11 @@ const initialState = {
         }
     },
     list:[],
+    create:{
+        msg:undefined,
+        err:undefined
+    }
+
 
 
 
@@ -32,6 +37,7 @@ interface StateInterface {
     list: any
     validate: InterfaceValidate;
     auth: InterfaceAuth;
+    create: InterfaceCreate
 
 
 }
@@ -62,6 +68,11 @@ export default function reducer(state: StateInterface = initialState, action: Ac
             return {
                 ...state,
                 list: action.payload
+            }
+            case ActionType.CREATE:
+            return {
+                ...state,
+                create: action.payload
             }
         default: return state
     }

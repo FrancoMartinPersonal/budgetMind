@@ -7,30 +7,45 @@ import { authRedirect } from '../components/Auth';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { allActions } from '../actions';
-import { loadCookie } from '../components/Cookies';
+import { loadCookie, saveCookie } from '../components/Cookies';
 
 function MainScreen() {
-    const { authLog } = useLog()
+    const { authLog, tokenLog } = useLog()
     const dispatch = useDispatch()
     const { LoginAction, ValidateAction } = bindActionCreators(allActions, dispatch)
 
 
     let cookieloaded = loadCookie("token")
+    // useEffect(() => {
+    //     ValidateAction(cookieloaded)
+    //     return () => {
+
+    //     }
+    // }, [cookieloaded])
     useEffect(() => {
-        ValidateAction(cookieloaded)
+        console.log(cookieloaded, 'use eff cookloa')
+        if (cookieloaded) ValidateAction(cookieloaded)
+    }, [])
+    useEffect(() => {
+        if (!cookieloaded) {
+        let tokenRes = saveCookie({ name: 'token', value: tokenLog, time: 30 })
+        console.log(tokenRes)
+        ValidateAction(tokenRes)
+        }
+
         return () => {
 
         }
-    }, [cookieloaded])
+    }, [tokenLog])
     /*  if you dont connect or let the back on, the flow doesnt work*/
-  
+
     return (
         <>
-        {/* authLog == undefined ? null : */}
-        {
-                authLog == undefined ? <LandingScreen /> :
-                authLog == true ? <HomeScreen />:<LandingScreen /> 
-                    
+            {/* authLog == undefined ? null : */}
+            {
+
+                authLog == true ? <HomeScreen /> : <LandingScreen />
+
             }
         </>
     )

@@ -10,6 +10,13 @@ interface LoginActionInterface {
     user: string
 }
 
+interface CreateActionInterface {
+    concept:string,
+    amount:number,
+    date:Date,
+    type:"+"|"-"
+}
+
 export const LoginAction = (data:LoginActionInterface) => {
     let stringified = JSON.stringify(data)
     console.log(stringified, 'data in LoginAction')
@@ -131,6 +138,7 @@ return (dispatch:Dispatch) => {
         mode:'cors',
         headers:{
             'Authorization': 'Bearer ' + token,
+            
         }
     }).then((res)=> {
         return res.json()
@@ -138,6 +146,32 @@ return (dispatch:Dispatch) => {
         console.log(res)
         dispatch({
             type:ActionType.LIST,
+            payload:res
+        })
+    })
+}
+}
+
+export const CreateAction  = (token:string|undefined|null,create:CreateActionInterface ) => {
+    console.log(JSON.stringify(create))
+
+    //always remember send a "content type apl json in header to req body"
+ return (dispatch:Dispatch) => {
+     fetch('http://localhost:3001/concept/create',{
+        method:'POST',
+        mode:'cors',
+        headers:{
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+            
+        },
+        body:JSON.stringify(create)
+    }).then((res)=> {
+        return res.json()
+    }).then(res => {
+        console.log(res)
+        dispatch({
+            type:ActionType.CREATE,
             payload:res
         })
     })
