@@ -8,16 +8,18 @@ const conceptSchema = new Schema ({
 
     },
     id: SchemaTypes.ObjectId,
-    amount:{
-        type:Number
-    },
     date:{
         type:Date,
         //default: new Date()
     },
     user:{type:Schema.Types.ObjectId,
-        ref:'User'}
+        ref:'User'},
         //one belongs 
+        amounts:[{
+        type:Schema.Types.ObjectId,
+        ref:'Amount'
+    }]
+    //to many
 })
 
 module.exports = model('Concept',conceptSchema)

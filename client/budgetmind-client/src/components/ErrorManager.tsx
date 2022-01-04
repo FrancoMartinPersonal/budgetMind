@@ -33,3 +33,4 @@ export const onSendErrorRegister = (state:onSendErrorRegisterInterface,setErr:Re
 
     setErr(errors)
 }
+

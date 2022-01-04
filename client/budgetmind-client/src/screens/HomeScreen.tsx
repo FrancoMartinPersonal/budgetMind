@@ -39,14 +39,21 @@ export default function HomeScreen() {
     useEffect(() => {
         //in this instance, we already have a token. we need to bring it to us with an endpoint
         CheckListAction(cookieLoaded)
-    }, [createErr])
+    }, [createInfo])
+
+    const onDeleteConcepts = (e:any) => {
+        console.log(e)
+    }
+    const onAddConcepts = (e:any) => {
+        console.log(e)
+    }
 
     const onSubmitSendConcepts = (e:any) => {
         e.preventDefault()
         //make a err control
         let createToSend = {
             concept:sendCon.concept,
-            amount:sendCon.amount,
+            amount:Number(sendCon.amount),
             date: new Date (sendCon.dateISO),
             type: sendCon.type
         }
@@ -97,6 +104,11 @@ export default function HomeScreen() {
                         </CreateSend>
 
                     </CreateForm >
+                    <div>
+                        <h6>
+                            {createInfo}
+                        </h6>
+                    </div>
                     <ListDiv>
                         <ListRowDiv>
 
@@ -122,7 +134,7 @@ export default function HomeScreen() {
                 </MiddleDiv>
                 <ListDiv>
                     {listInfo?.map((e:any) => {
-                    return(<ListRowDiv>
+                    return(<ListRowDiv key={e._id}>
                        
                         <ConceptH6>
                             {e.concept}
@@ -130,6 +142,10 @@ export default function HomeScreen() {
                         <AmountNetoH6 >
                             {e.amount}
                         </AmountNetoH6>
+                        <EquisP onClick={() => onDeleteConcepts(e._id)}
+                        >x
+                        </EquisP>
+                        <button onClick={() => onAddConcepts(e._id)}>add</button>
                         </ListRowDiv>)
                        
                     })}
@@ -171,6 +187,9 @@ const ListRowDiv = styled.div`
  padding:10px;
  display:flex;
  flex-direction:row;
+ @media (max-width: 768px) {
+     flex-direction: column;
+    }
 `
 
 const ConceptH6 = styled.p`
@@ -225,4 +244,9 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 border:1px solid black;
+`
+const EquisP = styled.p `
+margin:0;
+cursor:pointer;
+
 `
