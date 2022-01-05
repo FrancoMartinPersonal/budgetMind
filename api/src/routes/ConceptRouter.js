@@ -89,6 +89,47 @@ router.post('/create', (req, res, next) => {
     })(req, res, next)
 })
 
+router.get('/show/:id', (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+
+        try {
+            const   {id}  = req.params
+            
+            if (err || !user) {
+
+                console.log(info)
+                return res.status(400).send({
+                    info,
+                })
+            } else {
+                //console.log(id.id)
+                if ( id) {
+                    Concept.findById(id).
+                    populate('amounts').
+                    exec(function (err, amountsPop) {
+                        if (err) return handleError(err);
+                        else return res.send(amountsPop)
+                    })
+
+
+
+                } else {
+                    return res.status(400).send({
+
+                        msg: "there's no enough data",
+                        err: true,
+
+                    })
+                }
+            }
+        } catch (err) {
+            next(err)
+            res.status(404).send(err)
+        }
+    })(req, res, next)
+})
+
+
 router.post('/addAmount', (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 

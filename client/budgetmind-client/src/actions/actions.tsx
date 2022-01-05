@@ -11,13 +11,18 @@ interface LoginActionInterface {
 }
 
 interface CreateActionInterface {
-    concept:string,
-    amount:number,
-    date:Date,
-   
+    concept: string,
+    amount: number,
+    date: Date,
+
 }
 
-export const LoginAction = (data:LoginActionInterface) => {
+interface AddAmountActionInterface {
+    amount:number,
+    id:string
+}
+
+export const LoginAction = (data: LoginActionInterface) => {
     let stringified = JSON.stringify(data)
     console.log(stringified, 'data in LoginAction')
 
@@ -45,32 +50,32 @@ export const LoginAction = (data:LoginActionInterface) => {
 
     }
 }
-export const  LogoutAction = () => {
+export const LogoutAction = () => {
     //this action clean the reducer 
-    return(dispatch:Dispatch) => {
+    return (dispatch: Dispatch) => {
         dispatch({
-            type:ActionType.VALIDATE,
-            payload:{
-                token:'',
-                msg:undefined
+            type: ActionType.VALIDATE,
+            payload: {
+                token: '',
+                msg: undefined
             }
         })
         dispatch({
-          type:ActionType.AUTH,
-          payload:{
-            info: {},
-            auth: false,
-            login: {
-                date: '',
-                mail: '',
-                id: '',
-                user: ''
+            type: ActionType.AUTH,
+            payload: {
+                info: {},
+                auth: false,
+                login: {
+                    date: '',
+                    mail: '',
+                    id: '',
+                    user: ''
+                }
             }
-          }  
         })
     }
 }
-export const ValidateAction = (token: string|undefined|null) => {
+export const ValidateAction = (token: string | undefined | null) => {
     console.log(token, 'token in ValidateAction')
     return (dispatch: Dispatch) => {
         fetch('http://localhost:3001/u/validate', {
@@ -101,7 +106,7 @@ export const ValidateAction = (token: string|undefined|null) => {
 
 }
 
-export const RegisterAction = (data:LoginActionInterface) => {
+export const RegisterAction = (data: LoginActionInterface) => {
     let stringified = JSON.stringify(data)
     console.log(stringified, 'data in RegisterAction')
 
@@ -131,49 +136,97 @@ export const RegisterAction = (data:LoginActionInterface) => {
 }
 
 
-export const CheckListAction = (token:string|undefined|null) => {
-return (dispatch:Dispatch) => {
-    fetch('http://localhost:3001/concept/check',{
-        method:'GET',
-        mode:'cors',
-        headers:{
-            'Authorization': 'Bearer ' + token,
-            
-        }
-    }).then((res)=> {
-        return res.json()
-    }).then(res => {
-        console.log(res)
-        dispatch({
-            type:ActionType.LIST,
-            payload:res
+export const CheckListAction = (token: string | undefined | null) => {
+    return (dispatch: Dispatch) => {
+        fetch('http://localhost:3001/concept/check', {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+
+            }
+        }).then((res) => {
+            return res.json()
+        }).then(res => {
+            console.log(res)
+            dispatch({
+                type: ActionType.LIST,
+                payload: res
+            })
         })
-    })
-}
+    }
 }
 
-export const CreateAction  = (token:string|undefined|null,create:CreateActionInterface ) => {
+export const CreateAction = (token: string | undefined | null, create: CreateActionInterface) => {
     console.log(JSON.stringify(create))
 
     //always remember send a "content type apl json in header to req body"
- return (dispatch:Dispatch) => {
-     fetch('http://localhost:3001/concept/create',{
-        method:'POST',
-        mode:'cors',
-        headers:{
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-            
-        },
-        body:JSON.stringify(create)
-    }).then((res)=> {
-        return res.json()
-    }).then(res => {
-        console.log(res)
-        dispatch({
-            type:ActionType.CREATE,
-            payload:res
+    return (dispatch: Dispatch) => {
+        fetch('http://localhost:3001/concept/create', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+
+            },
+            body: JSON.stringify(create)
+        }).then((res) => {
+            return res.json()
+        }).then(res => {
+            console.log(res)
+            dispatch({
+                type: ActionType.CREATE,
+                payload: res
+            })
         })
-    })
+    }
 }
+
+export const AddAmountAction = (token:string,props:AddAmountActionInterface) => {
+    return (dispatch: Dispatch) => {
+        fetch('http://localhost:3001/concept/addAmount', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {            
+           'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+
+            },
+            body: JSON.stringify(props)
+        }).then((res) => {
+            return res.json()
+        }).then(res => {
+            console.log(res)
+            dispatch({
+                type: ActionType.CREATE,
+                payload: res
+            })
+        })
+    
+    }
+}
+
+export const ShowConcept = (token:string|null,id:string) => {
+    return (dispatch: Dispatch) => {
+        fetch('http://localhost:3001/concept/show/'+id, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {            
+           'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+
+            },
+          
+        }).then((res) => {
+            return res.json()
+        }).then(res => {
+            console.log(res)
+            dispatch({
+                type: ActionType.SHOWCONCEPT,
+                payload: res
+            })
+        })
+    
+    }
 }

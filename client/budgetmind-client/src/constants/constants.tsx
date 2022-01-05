@@ -4,7 +4,9 @@ export enum ActionType {
     AUTH = 'auth',
     REGISTER = 'register',
     LIST = 'list',
-    CREATE ='create'
+    CREATE ='create',
+    ADDAMOUNT = 'AddAmount',
+    SHOWCONCEPT= 'showConcept'
 }
 
 export interface InterfaceLogin {

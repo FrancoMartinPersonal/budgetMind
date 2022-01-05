@@ -29,5 +29,14 @@ interface Create{
  type:ActionType.CREATE,
  payload:InterfaceCreate
 }
+interface AddAmount {
+type:ActionType.LIST
+payload:InterfaceList
+}
 
-export type ActionInterfaces = Validate | Auth | Register | List | Create
+interface showConcept {
+type:ActionType.SHOWCONCEPT
+payload:InterfaceList
+}
+
+export type ActionInterfaces = Validate | Auth | Register | List | Create | AddAmount | showConcept

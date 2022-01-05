@@ -14,6 +14,7 @@ function useLog () {
     const listInfo = selectorState.list
     const createInfo = selectorState.create.msg
     const createErr = selectorState.create.err
+    const showConceptInfo = selectorState.showConcept
     return {
         authLog,
         authInfoLog,
@@ -23,6 +24,7 @@ function useLog () {
         listInfo,
         createErr,
         createInfo,
+        showConceptInfo
     }
 }
 export default useLog

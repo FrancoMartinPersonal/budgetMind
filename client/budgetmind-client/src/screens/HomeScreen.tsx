@@ -11,22 +11,24 @@ import useLog from '../hooks/useLog';
 import { loadCookie } from '../components/Cookies';
 import { CheckListAction } from '../actions/actions';
 import { createAction } from '@reduxjs/toolkit';
+import EditConcept from '../components/EditConcept';
 
 interface ConceptSendInterface {
-    concept:string;
-    amount:number;
-    dateISO:any;
-    type:"+"|"-";
+    concept: string;
+    amount: number;
+    dateISO: any;
+    type: "+" | "-";
 }
 
 export default function HomeScreen() {
-    const { authILoginLog,listInfo,createErr,createInfo } = useLog()
+    const { authILoginLog, listInfo, createErr, createInfo } = useLog()
     const dispatch = useDispatch()
-    const { CheckListAction,ValidateAction,CreateAction } = bindActionCreators(allActions, dispatch)
+    const { CheckListAction, ValidateAction, CreateAction,ShowConcept } = bindActionCreators(allActions, dispatch)
     let cookieLoaded = loadCookie('token')
-    const [sendCon,setSendCon] = useState<ConceptSendInterface>({
-        concept : "",
-        amount:0,
+    const [edit, setEdit] = useState<boolean>(false)
+    const [sendCon, setSendCon] = useState<ConceptSendInterface>({
+        concept: "",
+        amount: 0,
         dateISO: "",
         type: "+"
 
@@ -41,61 +43,66 @@ export default function HomeScreen() {
         CheckListAction(cookieLoaded)
     }, [createInfo])
 
-    const onDeleteConcepts = (e:any) => {
+    const onDeleteConcepts = (e: any) => {
         console.log(e)
     }
-    const onAddConcepts = (e:any) => {
+    const onAddConcepts = (e: any) => {
         console.log(e)
     }
-
-    const onSubmitSendConcepts = (e:any) => {
+    const onEditConcepts = (id: string) => {
+       if (!edit) {
+            setEdit(true)
+            ShowConcept(cookieLoaded,id)
+        }
+    }
+    const onSubmitSendConcepts = (e: any) => {
         e.preventDefault()
         //make a err control
-        if(sendCon.type == "+"){
+        if (sendCon.type == "+") {
             setSendCon({
                 ...sendCon,
-                amount:Number(+sendCon.amount)
+                amount: Number(+sendCon.amount)
             })
         } else if (sendCon.type == "-") {
             let numberNeg = Number(-sendCon.amount)
             numberNeg = -numberNeg
             console.log(numberNeg, 'number before')
-                setSendCon({
-                    ...sendCon,
-                    amount:numberNeg
-                })
-            }
-        
-        let createToSend = {
-            concept:sendCon.concept,
-            amount:Number(sendCon.amount),
-            date: new Date (sendCon.dateISO),
-           
+            setSendCon({
+                ...sendCon,
+                amount: numberNeg
+            })
         }
-        console.log(createToSend,'create to send')
+
+        let createToSend = {
+            concept: sendCon.concept,
+            amount: Number(sendCon.amount),
+            date: new Date(sendCon.dateISO),
+
+        }
+        console.log(createToSend, 'create to send')
         CreateAction(cookieLoaded, createToSend)
     }
-    const onChangeSendConcepts = (e:any) => {
+    const onChangeSendConcepts = (e: any) => {
         console.log(e.target.name)
         console.log(e.target.value)
         let name = e.target.name
-        
+
         setSendCon({
             ...sendCon,
-            [name] : e.target.value
+            [name]: e.target.value
         })
     }
-    const sumOfAmounts = (e:any) => {
-        let sum:number  = 0;
+    const sumOfAmounts = (e: any) => {
+        let sum: number = 0;
         for (let index = 0; index < e.length; index++) {
-            sum  = sum+ e[index].amount;
-            
+            sum = sum + e[index].amount;
+
         }
         console.log(sum)
         return sum
     }
 
-    
+
     return (
         <MainDiv>
             <GeneralDiv>
@@ -110,14 +117,14 @@ export default function HomeScreen() {
                 <MiddleDiv>
                     <CreateForm onSubmit={onSubmitSendConcepts}>
                         <CreateDiv>
-                            <CreateInput type="text"  name="concept" 
-                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.concept}/>
-                            <CreateInput type="number"  name="amount" 
-                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.amount}/>
-                            <CreateInput type="date" name="dateISO" 
-                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.dateISO} />
-                            <select name="type" 
-                            onChange={(e:any) => onChangeSendConcepts(e)} value={sendCon.type} >
+                            <CreateInput type="text" name="concept"
+                                onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.concept} />
+                            <CreateInput type="number" name="amount"
+                                onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.amount} />
+                            <CreateInput type="date" name="dateISO"
+                                onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.dateISO} />
+                            <select name="type"
+                                onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.type} >
                                 <option value="+">+</option>
                                 <option value="-">-</option>
                             </select>
@@ -134,6 +141,7 @@ export default function HomeScreen() {
                         </h6>
                     </div>
                     <ListDiv>
+                     
                         <ListRowDiv>
 
                             <ConceptH6>
@@ -157,21 +165,22 @@ export default function HomeScreen() {
 
                 </MiddleDiv>
                 <ListDiv>
-                    {listInfo?.map((e:any) => {
-                    return(<ListRowDiv key={e._id}>
-                       
-                        <ConceptH6>
-                            {e.concept}
-                        </ConceptH6>
-                        <AmountNetoH6 >
-                          {sumOfAmounts(e.amounts)}
-                        </AmountNetoH6>
-                        <EquisP onClick={() => onDeleteConcepts(e._id)}
-                        >x
-                        </EquisP>
-                        <button onClick={() => onAddConcepts(e._id)}>add</button>
+             {edit&&<EditConcept/>}
+                    {listInfo?.map((e: any) => {
+                        return (<ListRowDiv key={e._id}>
+
+                            <ConceptH6>
+                                {e.concept}
+                            </ConceptH6>
+                            <AmountNetoH6 >
+                                {sumOfAmounts(e.amounts)}
+                            </AmountNetoH6>
+                            <EquisP onClick={() => onDeleteConcepts(e._id)}
+                            >x
+                            </EquisP>
+                            <button onClick={() => onEditConcepts(e._id)}>edit</button>
                         </ListRowDiv>)
-                       
+
                     })}
                     {/* <ListRowDiv>
 
@@ -269,7 +278,7 @@ flex-direction:column;
 justify-content:center;
 border:1px solid black;
 `
-const EquisP = styled.p `
+const EquisP = styled.p`
 margin:0;
 cursor:pointer;
 
