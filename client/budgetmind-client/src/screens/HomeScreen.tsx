@@ -51,11 +51,26 @@ export default function HomeScreen() {
     const onSubmitSendConcepts = (e:any) => {
         e.preventDefault()
         //make a err control
+        if(sendCon.type == "+"){
+            setSendCon({
+                ...sendCon,
+                amount:Number(+sendCon.amount)
+            })
+        } else if (sendCon.type == "-") {
+            let numberNeg = Number(-sendCon.amount)
+            numberNeg = -numberNeg
+            console.log(numberNeg, 'number before')
+                setSendCon({
+                    ...sendCon,
+                    amount:numberNeg
+                })
+            }
+        
         let createToSend = {
             concept:sendCon.concept,
             amount:Number(sendCon.amount),
             date: new Date (sendCon.dateISO),
-            type: sendCon.type
+           
         }
         console.log(createToSend,'create to send')
         CreateAction(cookieLoaded, createToSend)
@@ -70,8 +85,17 @@ export default function HomeScreen() {
             [name] : e.target.value
         })
     }
+    const sumOfAmounts = (e:any) => {
+        let sum:number  = 0;
+        for (let index = 0; index < e.length; index++) {
+            sum  = sum+ e[index].amount;
+            
+        }
+        console.log(sum)
+        return sum
+    }
 
-    console.log( new Date (sendCon.dateISO))
+    
     return (
         <MainDiv>
             <GeneralDiv>
@@ -140,7 +164,7 @@ export default function HomeScreen() {
                             {e.concept}
                         </ConceptH6>
                         <AmountNetoH6 >
-                            {e.amount}
+                          {sumOfAmounts(e.amounts)}
                         </AmountNetoH6>
                         <EquisP onClick={() => onDeleteConcepts(e._id)}
                         >x

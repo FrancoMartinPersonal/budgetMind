@@ -7,6 +7,10 @@ const conceptSchema = new Schema ({
         type:String,
 
     },
+    // total:{
+    //     type:Number,
+    //     default:0
+    // },
     id: SchemaTypes.ObjectId,
     date:{
         type:Date,

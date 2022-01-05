@@ -11,7 +11,7 @@ function useLog () {
     const authILoginLog = selectorState?.auth!.login
     const tokenLog = selectorState?.validate!.token
     const tokenMsgLog = selectorState?.validate!.msg
-    const listInfo = selectorState.list.concepts
+    const listInfo = selectorState.list
     const createInfo = selectorState.create.msg
     const createErr = selectorState.create.err
     return {

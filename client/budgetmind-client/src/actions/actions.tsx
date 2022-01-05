@@ -14,7 +14,7 @@ interface CreateActionInterface {
     concept:string,
     amount:number,
     date:Date,
-    type:"+"|"-"
+   
 }
 
 export const LoginAction = (data:LoginActionInterface) => {
