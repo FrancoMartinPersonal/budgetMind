@@ -23,7 +23,7 @@ interface ConceptSendInterface {
 export default function HomeScreen() {
     const { authILoginLog, listInfo, createErr, createInfo } = useLog()
     const dispatch = useDispatch()
-    const { CheckListAction, ValidateAction, CreateAction,ShowConcept } = bindActionCreators(allActions, dispatch)
+    const { CheckListAction, ValidateAction, CreateAction, ShowConcept } = bindActionCreators(allActions, dispatch)
     let cookieLoaded = loadCookie('token')
     const [edit, setEdit] = useState<boolean>(false)
     const [sendCon, setSendCon] = useState<ConceptSendInterface>({
@@ -50,9 +50,11 @@ export default function HomeScreen() {
         console.log(e)
     }
     const onEditConcepts = (id: string) => {
-       if (!edit) {
+        if (!edit) {
             setEdit(true)
-            ShowConcept(cookieLoaded,id)
+            ShowConcept(cookieLoaded, id)
+        } else if (edit) {
+            ShowConcept(cookieLoaded, id)
         }
     }
     const onSubmitSendConcepts = (e: any) => {
@@ -141,7 +143,7 @@ export default function HomeScreen() {
                         </h6>
                     </div>
                     <ListDiv>
-                     
+
                         <ListRowDiv>
 
                             <ConceptH6>
@@ -164,35 +166,31 @@ export default function HomeScreen() {
                     </ListDiv>
 
                 </MiddleDiv>
-                <ListDiv>
-             {edit&&<EditConcept/>}
-                    {listInfo?.map((e: any) => {
-                        return (<ListRowDiv key={e._id}>
+                <AsideRig>
 
-                            <ConceptH6>
-                                {e.concept}
-                            </ConceptH6>
-                            <AmountNetoH6 >
-                                {sumOfAmounts(e.amounts)}
-                            </AmountNetoH6>
-                            <EquisP onClick={() => onDeleteConcepts(e._id)}
-                            >x
-                            </EquisP>
-                            <button onClick={() => onEditConcepts(e._id)}>edit</button>
-                        </ListRowDiv>)
+                    {edit && <EditConcept setEdit={setEdit} />}
+                    <ListDiv>
 
-                    })}
-                    {/* <ListRowDiv>
+                        {listInfo?.map((e: any) => {
+                            return (<ListRowDiv key={e._id}>
 
-                        <ConceptH6>
-                            concept2
-                        </ConceptH6>
-                        <AmountNetoH6 theme={'red'}>
-                            900
-                        </AmountNetoH6>
-                    </ListRowDiv> */}
+                                <ConceptH6>
+                                    {e.concept}
+                                </ConceptH6>
+                                <AmountNetoH6 >
+                                    {sumOfAmounts(e.amounts)}
+                                </AmountNetoH6>
+                                <EquisP onClick={() => onDeleteConcepts(e._id)}
+                                >x
+                                </EquisP>
+                                <button onClick={() => onEditConcepts(e._id)}>edit</button>
+                            </ListRowDiv>)
 
-                </ListDiv>
+                        })}
+
+                    </ListDiv>
+                </AsideRig>
+
             </GeneralDiv>
         </MainDiv>
     )
@@ -281,5 +279,8 @@ border:1px solid black;
 const EquisP = styled.p`
 margin:0;
 cursor:pointer;
+
+`
+const AsideRig = styled.aside`
 
 `
