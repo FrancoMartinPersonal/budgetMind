@@ -98,12 +98,12 @@ router.post('/create', async (req, res, next) => {
     })(req, res, next)
 })
 
-router.post('/eliminate/:id', async (req, res, next) => {
+router.delete('/delete/:id', async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
             const { id } = req.params
-            console.log(req.body, 'body')
+            console.log(req.params, 'params')
             if (err || !user) {
 
                 console.log(info)
@@ -113,21 +113,23 @@ router.post('/eliminate/:id', async (req, res, next) => {
             } else {
                 if (id) {
                     const conceptLoaded = await Concept.findById(id)
-
-                    let resUpdate = await Concept.updateOne(
-                        { _id: { $in: conceptLoaded.amounts } },
-                        { $pull: { amounts: id } });
-                    if (resUpdate) {
-                        return res.send({ msg: "delete it sucessfully!", err: false })
-
-                    } else {
-                        return res.status(400).send(
-                            {
-                                msg: "a problem was ocurred trying to delete in database",
-                                err: true
-                            })
-
-                    }
+                    conceptLoaded.amounts.forEach(async(amount) => {
+        
+                            await Amount.findByIdAndDelete(amount)
+                        })
+                        let conceptDeleted =  await Concept.findByIdAndDelete(id)
+                        if (conceptDeleted) {
+                            
+                            return res.send({ msg: "delete it sucessfully!", err: false })
+    
+                        } else {
+                            return res.status(400).send(
+                                {
+                                    msg: "a problem was ocurred trying to delete in database",
+                                    err: true
+                                })
+    
+                        }
                 } else {
                     return res.status(400).send({
 
