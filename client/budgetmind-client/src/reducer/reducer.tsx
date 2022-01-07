@@ -83,6 +83,11 @@ export default function reducer(state: StateInterface = initialState, action: Ac
                 ...state,
                 showConcept: action.payload
             }
+            case ActionType.DELETEAMOUNT:
+                return {
+                    ...state,
+                    showConcept: action.payload
+                }
         default: return state
     }
 

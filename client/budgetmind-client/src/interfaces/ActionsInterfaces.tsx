@@ -1,4 +1,4 @@
-import { ActionType, InterfaceAuth, InterfaceLogin, InterfaceValidate, InterfaceList, InterfaceCreate } from '../constants/constants';
+import { ActionType, InterfaceAuth, InterfaceLogin, InterfaceValidate, InterfaceList, InterfaceCreate, InterfaceConcept } from '../constants/constants';
 
 // interface Login {
 //     type:ActionType.LOGIN,
@@ -31,12 +31,16 @@ interface Create{
 }
 interface AddAmount {
 type:ActionType.LIST
-payload:InterfaceList
+payload:InterfaceConcept
 }
 
 interface showConcept {
 type:ActionType.SHOWCONCEPT
-payload:InterfaceList
+payload:InterfaceConcept
+}
+interface deleteAmount {
+    type:ActionType.DELETEAMOUNT
+    payload:InterfaceConcept
 }
 
-export type ActionInterfaces = Validate | Auth | Register | List | Create | AddAmount | showConcept
+export type ActionInterfaces = Validate | Auth | Register | List | Create | AddAmount | showConcept | deleteAmount

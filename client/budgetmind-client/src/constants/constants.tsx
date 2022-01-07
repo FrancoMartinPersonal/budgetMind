@@ -6,7 +6,8 @@ export enum ActionType {
     LIST = 'list',
     CREATE ='create',
     ADDAMOUNT = 'AddAmount',
-    SHOWCONCEPT= 'showConcept'
+    DELETEAMOUNT = 'DeleteAmount',
+    SHOWCONCEPT= 'showConcept',
 }
 
 export interface InterfaceLogin {
@@ -20,13 +21,14 @@ export interface InterfaceLogin {
 
 
 export interface InterfaceConcept {
-    _id:     string| undefined;
-    concept: string| undefined;
-    amount:  number| undefined;
-    date:    string| undefined;
-    user:    string| undefined;
-    __v:     number| undefined;
+    _id:     string;
+    concept: string;
+    date:    string;
+    user:    string;
+    amounts: any[];
+    __v:     number;
 }
+
 
 export interface InterfaceList {
     _id:      string;

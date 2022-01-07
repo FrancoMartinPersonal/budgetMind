@@ -206,6 +206,29 @@ export const AddAmountAction = (token:string,props:AddAmountActionInterface) => 
     
     }
 }
+export const DeleteAmountAction = (token:string,id:string) => {
+    return (dispatch: Dispatch) => {
+        fetch('http://localhost:3001/concept/deleteAmount/'+id, {
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {            
+           'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+
+            },
+           
+        }).then((res) => {
+            return res.json()
+        }).then(res => {
+            console.log(res)
+            dispatch({
+                type: ActionType.CREATE,
+                payload: res
+            })
+        })
+    
+    }
+}
 
 export const ShowConcept = (token:string|null,id:string) => {
     return (dispatch: Dispatch) => {

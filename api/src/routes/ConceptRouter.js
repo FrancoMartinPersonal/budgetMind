@@ -18,9 +18,16 @@ const newAmount = async (amount, id) => {
     if (amountSaved) return amountSaved
     else return "a problem was ocurred"
 }
+const populateConceptAmount = (id,res) => {
+    Concept.findById(id).
+    populate('amounts').
+    exec(function (err, amountsPop) {
+        if (err) return handleError(err);
+        else return res.send(amountsPop)
+    })
+}
 
-
-router.post('/create', (req, res, next) => {
+router.post('/create', async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
@@ -89,7 +96,7 @@ router.post('/create', (req, res, next) => {
     })(req, res, next)
 })
 
-router.get('/show/:id', (req, res, next) => {
+router.get('/show/:id', async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
@@ -104,13 +111,10 @@ router.get('/show/:id', (req, res, next) => {
             } else {
                 //console.log(id.id)
                 if (id) {
-                    Concept.findById(id).
-                        populate('amounts').
-                        exec(function (err, amountsPop) {
-                            if (err) return handleError(err);
-                            else return res.send(amountsPop)
-                        })
-
+                    console.log(await Concept.findById(id))
+                    populateConceptAmount(id,res)
+                 
+               
 
 
                 } else {
@@ -130,7 +134,7 @@ router.get('/show/:id', (req, res, next) => {
 })
 
 
-router.post('/addAmount', (req, res, next) => {
+router.post('/addAmount', async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
@@ -152,8 +156,8 @@ router.post('/addAmount', (req, res, next) => {
                     ]
                     let upgradedConcept = await conceptLoaded.save()
                     if (upgradedConcept) {
+                        populateConceptAmount(id,res)
 
-                        res.send(upgradedConcept)
                     }
 
 
@@ -174,7 +178,7 @@ router.post('/addAmount', (req, res, next) => {
     })(req, res, next)
 })
 
-router.get('/deleteAmount/:id', async (req, res, next) => {
+router.delete('/deleteAmount/:id', async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
@@ -194,11 +198,12 @@ router.get('/deleteAmount/:id', async (req, res, next) => {
                     const resDelete = await Concept.updateOne(
                         { _id: AmountLoaded.concept },
                         { $pull: { amounts: id } });
-                   
+
                     if (resDelete) {
                         await Amount.findByIdAndDelete(id)
-                        conceptLoaded = await Concept.findById(AmountLoaded.concept)
-                        res.send(conceptLoaded)
+                        //conceptLoaded = await Concept.findById(AmountLoaded.concept)
+                        populateConceptAmount(AmountLoaded.concept,res)
+
                     }
 
 
