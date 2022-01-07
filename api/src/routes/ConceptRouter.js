@@ -42,7 +42,7 @@ router.post('/create', (req, res, next) => {
                         user: userloaded._id,
                         date,
                         amounts: [],
-                        total:0,
+                        total: 0,
                         _id: new Types.ObjectId(),
 
 
@@ -53,7 +53,7 @@ router.post('/create', (req, res, next) => {
                         ...conceptCreated.amounts,
                         amountLoaded._id
                     ]
-                    
+
                     const conceptSaved = await conceptCreated.save()
                     let upgradeUser = await User.findById(userloaded._id)
                     console.log(upgradeUser, 'user take it')
@@ -93,8 +93,8 @@ router.get('/show/:id', (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
-            const   {id}  = req.params
-            
+            const { id } = req.params
+
             if (err || !user) {
 
                 console.log(info)
@@ -103,13 +103,13 @@ router.get('/show/:id', (req, res, next) => {
                 })
             } else {
                 //console.log(id.id)
-                if ( id) {
+                if (id) {
                     Concept.findById(id).
-                    populate('amounts').
-                    exec(function (err, amountsPop) {
-                        if (err) return handleError(err);
-                        else return res.send(amountsPop)
-                    })
+                        populate('amounts').
+                        exec(function (err, amountsPop) {
+                            if (err) return handleError(err);
+                            else return res.send(amountsPop)
+                        })
 
 
 
@@ -156,6 +156,50 @@ router.post('/addAmount', (req, res, next) => {
                         res.send(upgradedConcept)
                     }
 
+
+
+                } else {
+                    return res.status(400).send({
+
+                        msg: "there's no enough data",
+                        err: true,
+
+                    })
+                }
+            }
+        } catch (err) {
+            next(err)
+            res.status(404).send(err)
+        }
+    })(req, res, next)
+})
+
+router.get('/deleteAmount/:id', async (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+
+        try {
+            const { id } = req.params
+            console.log(id, 'params')
+            if (err || !user) {
+
+                console.log(info)
+                return res.status(400).send({
+                    info,
+                })
+            } else {
+                if (id) {
+                    let AmountLoaded = await Amount.findById(id)
+                    let conceptLoaded = await Concept.findById(AmountLoaded.concept)
+                    let idString = id.toString()
+                    const resDelete = await Concept.updateOne(
+                        { _id: AmountLoaded.concept },
+                        { $pull: { amounts: id } });
+                   
+                    if (resDelete) {
+                        await Amount.findByIdAndDelete(id)
+                        conceptLoaded = await Concept.findById(AmountLoaded.concept)
+                        res.send(conceptLoaded)
+                    }
 
 
                 } else {

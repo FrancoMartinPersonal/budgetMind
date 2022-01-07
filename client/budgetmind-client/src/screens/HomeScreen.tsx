@@ -12,6 +12,7 @@ import { loadCookie } from '../components/Cookies';
 import { CheckListAction } from '../actions/actions';
 import { createAction } from '@reduxjs/toolkit';
 import EditConcept from '../components/EditConcept';
+import { sumOfAmounts } from '../functions/Functions';
 
 interface ConceptSendInterface {
     concept: string;
@@ -94,15 +95,7 @@ export default function HomeScreen() {
             [name]: e.target.value
         })
     }
-    const sumOfAmounts = (e: any) => {
-        let sum: number = 0;
-        for (let index = 0; index < e.length; index++) {
-            sum = sum + e[index].amount;
-
-        }
-        console.log(sum)
-        return sum
-    }
+  
 
 
     return (
