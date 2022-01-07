@@ -12,6 +12,11 @@ const conceptSchema = new Schema ({
         type:Date,
         default: new Date()
     },
+    //dont write here
+    createdAt:{
+        type:Date,
+        default: Date.now
+    },
 
     concept:{
         type:Schema.Types.ObjectId,

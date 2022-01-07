@@ -6,13 +6,13 @@ import { allActions } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
-import { MainDiv } from '../themes/styledConstants';
+import { MainDiv, ButtonSend } from '../themes/styledConstants';
 import useLog from '../hooks/useLog';
 import { loadCookie } from '../components/Cookies';
 import { CheckListAction } from '../actions/actions';
 import { createAction } from '@reduxjs/toolkit';
 import EditConcept from '../components/EditConcept';
-import { sumOfAmounts } from '../functions/Functions';
+import { sumOfAmounts, dateNormalFormat } from '../functions/Functions';
 
 interface ConceptSendInterface {
     concept: string;
@@ -22,9 +22,9 @@ interface ConceptSendInterface {
 }
 
 export default function HomeScreen() {
-    const { authILoginLog, listInfo, createErr, createInfo } = useLog()
+    const { authILoginLog, listInfo, showConceptInfo, createInfo } = useLog()
     const dispatch = useDispatch()
-    const { CheckListAction, ValidateAction, CreateAction, ShowConcept } = bindActionCreators(allActions, dispatch)
+    const { CheckListAction, ValidateAction, CreateAction, ShowConcept,EraseSaveInfo } = bindActionCreators(allActions, dispatch)
     let cookieLoaded = loadCookie('token')
     const [edit, setEdit] = useState<boolean>(false)
     const [sendCon, setSendCon] = useState<ConceptSendInterface>({
@@ -42,7 +42,7 @@ export default function HomeScreen() {
     useEffect(() => {
         //in this instance, we already have a token. we need to bring it to us with an endpoint
         CheckListAction(cookieLoaded)
-    }, [createInfo])
+    }, [createInfo, showConceptInfo])
 
     const onDeleteConcepts = (e: any) => {
         console.log(e)
@@ -61,30 +61,62 @@ export default function HomeScreen() {
     const onSubmitSendConcepts = (e: any) => {
         e.preventDefault()
         //make a err control
-        if (sendCon.type == "+") {
-            setSendCon({
-                ...sendCon,
-                amount: Number(+sendCon.amount)
-            })
-        } else if (sendCon.type == "-") {
-            let numberNeg = Number(-sendCon.amount)
-            numberNeg = -numberNeg
-            console.log(numberNeg, 'number before')
-            setSendCon({
-                ...sendCon,
-                amount: numberNeg
-            })
-        }
-
         let createToSend = {
             concept: sendCon.concept,
             amount: Number(sendCon.amount),
             date: new Date(sendCon.dateISO),
 
         }
+        if (sendCon.type == "+") {
+            let numberNeg = Number(sendCon.amount)
+            numberNeg = +numberNeg
+            createToSend = {
+                concept: sendCon.concept,
+                amount: numberNeg,
+                date: new Date(sendCon.dateISO),
+
+            }
+        } else if (sendCon.type == "-") {
+            let numberNeg = Number(sendCon.amount)
+            numberNeg = -numberNeg
+            createToSend = {
+                concept: sendCon.concept,
+                amount: numberNeg,
+                date: new Date(sendCon.dateISO),
+
+            }
+        }
+
+
         console.log(createToSend, 'create to send')
+        EraseSaveInfo()
         CreateAction(cookieLoaded, createToSend)
     }
+
+    const ListOrderByDate = (recents?: boolean) => {
+        let bunchOfAmounts: any = []
+        listInfo.map((concepts: any) => {
+            concepts.amounts.map((amounts: any) => {
+                bunchOfAmounts.push({ ...amounts,
+                    date: dateNormalFormat(amounts.date),
+                     name: concepts.concept,
+                    createdAt:amounts.createdAt,
+
+                 })
+            })
+        })
+        console.log(bunchOfAmounts, "before sort")
+          bunchOfAmounts?.sort(function (a: any, b: any) {
+            return new Date(a.createdAt.toString()).valueOf() - new Date(b.createdAt.toString()).valueOf();
+        });
+        console.log(bunchOfAmounts, "after sort")
+        if (recents) {
+            return bunchOfAmounts
+        } else {
+            return bunchOfAmounts?.reverse()
+        }
+    }
+
     const onChangeSendConcepts = (e: any) => {
         console.log(e.target.name)
         console.log(e.target.value)
@@ -95,8 +127,38 @@ export default function HomeScreen() {
             [name]: e.target.value
         })
     }
-  
+    const ListOfConcepts = () => {
+        return (
+            <div>
 
+                {ListOrderByDate()?.map((amounts: any) => {
+                    return (
+                        <ListRowDiv>
+                            <ConceptH6>
+                                {amounts.name}
+                            </ConceptH6>
+                            <ConceptH6>
+                                {dateNormalFormat(amounts.date)}
+                            </ConceptH6>
+                            {amounts.amount.toString().startsWith("-") ?
+                                <AmountH6 theme={'red'}>
+                                    {amounts.amount}
+                                </AmountH6> :
+                                <AmountH6 theme={'green'}>
+                                    +{amounts.amount}
+                                </AmountH6>
+                            }
+                        </ListRowDiv>
+                    )
+
+
+
+
+                })}
+
+            </div>
+        )
+    }
 
     return (
         <MainDiv>
@@ -125,9 +187,9 @@ export default function HomeScreen() {
                             </select>
 
                         </CreateDiv>
-                        <CreateSend>
+                        <ButtonSend>
                             enviar
-                        </CreateSend>
+                        </ButtonSend>
 
                     </CreateForm >
                     <div>
@@ -137,24 +199,7 @@ export default function HomeScreen() {
                     </div>
                     <ListDiv>
 
-                        <ListRowDiv>
-
-                            <ConceptH6>
-                                concept
-                            </ConceptH6>
-                            <AmountH6 theme={"green"}>
-                                +500
-                            </AmountH6>
-                        </ListRowDiv>
-                        <ListRowDiv>
-
-                            <ConceptH6>
-                                concept2
-                            </ConceptH6>
-                            <AmountH6 theme={"red"}>
-                                -356
-                            </AmountH6>
-                        </ListRowDiv>
+                        {listInfo && <ListOfConcepts></ListOfConcepts>}
 
                     </ListDiv>
 
@@ -210,6 +255,8 @@ const ListRowDiv = styled.div`
  border:1px solid black;
  padding:10px;
  display:flex;
+ justify-content: center;
+
  flex-direction:row;
  @media (max-width: 768px) {
      flex-direction: column;
@@ -243,7 +290,7 @@ const WelcomeH5 = styled.h5`
 const MiddleDiv = styled.div`
 padding:10px;
 display:flex;
-justify-content:center;
+
 flex-direction:column;
 `
 const AmountH6 = styled.p`

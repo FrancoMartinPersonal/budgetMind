@@ -9,22 +9,24 @@ const Concept = require('../models/Concept');
 const Amount = require('../models/Amount');
 const { SchemaTypes, Types } = require('mongoose');
 
-const newAmount = async (amount, id) => {
+
+const newAmount = async (amount, id, date) => {
     const amountCreated = new Amount({
         amount,
-        concept: id
+        concept: id,
+        date
     })
     const amountSaved = await amountCreated.save()
     if (amountSaved) return amountSaved
     else return "a problem was ocurred"
 }
-const populateConceptAmount = (id,res) => {
+const populateConceptAmount = (id, res) => {
     Concept.findById(id).
-    populate('amounts').
-    exec(function (err, amountsPop) {
-        if (err) return handleError(err);
-        else return res.send(amountsPop)
-    })
+        populate('amounts').
+        exec(function (err, amountsPop) {
+            if (err) return handleError(err);
+            else return res.send(amountsPop)
+        })
 }
 
 router.post('/create', async (req, res, next) => {
@@ -54,7 +56,7 @@ router.post('/create', async (req, res, next) => {
 
 
                     })
-                    let amountLoaded = await newAmount(amount, conceptCreated._id)
+                    let amountLoaded = await newAmount(amount, conceptCreated._id, date)
                     console.log()
                     conceptCreated.amounts = [
                         ...conceptCreated.amounts,
@@ -96,6 +98,52 @@ router.post('/create', async (req, res, next) => {
     })(req, res, next)
 })
 
+router.post('/eliminate/:id', async (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+
+        try {
+            const { id } = req.params
+            console.log(req.body, 'body')
+            if (err || !user) {
+
+                console.log(info)
+                return res.status(400).send({
+                    info,
+                })
+            } else {
+                if (id) {
+                    const conceptLoaded = await Concept.findById(id)
+
+                    let resUpdate = await Concept.updateOne(
+                        { _id: { $in: conceptLoaded.amounts } },
+                        { $pull: { amounts: id } });
+                    if (resUpdate) {
+                        return res.send({ msg: "delete it sucessfully!", err: false })
+
+                    } else {
+                        return res.status(400).send(
+                            {
+                                msg: "a problem was ocurred trying to delete in database",
+                                err: true
+                            })
+
+                    }
+                } else {
+                    return res.status(400).send({
+
+                        msg: "there's no enough data",
+                        err: true,
+
+                    })
+                }
+            }
+        } catch (err) {
+            next(err)
+            res.status(404).send(err)
+        }
+    })(req, res, next)
+})
+
 router.get('/show/:id', async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
@@ -112,9 +160,9 @@ router.get('/show/:id', async (req, res, next) => {
                 //console.log(id.id)
                 if (id) {
                     console.log(await Concept.findById(id))
-                    populateConceptAmount(id,res)
-                 
-               
+                    populateConceptAmount(id, res)
+
+
 
 
                 } else {
@@ -138,7 +186,7 @@ router.post('/addAmount', async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
 
         try {
-            const { amount, id } = req.body
+            const { amount, id, date } = req.body
             console.log(req.body, 'body')
             if (err || !user) {
 
@@ -147,16 +195,16 @@ router.post('/addAmount', async (req, res, next) => {
                     info,
                 })
             } else {
-                if (amount && id) {
+                if (amount && id && date) {
                     let conceptLoaded = await Concept.findById(id)
-                    let amountCreated = await newAmount(amount, conceptLoaded._id);
+                    let amountCreated = await newAmount(amount, conceptLoaded._id, date);
                     conceptLoaded.amounts = [
                         ...conceptLoaded.amounts,
                         amountCreated._id
                     ]
                     let upgradedConcept = await conceptLoaded.save()
                     if (upgradedConcept) {
-                        populateConceptAmount(id,res)
+                        populateConceptAmount(id, res)
 
                     }
 
@@ -202,7 +250,7 @@ router.delete('/deleteAmount/:id', async (req, res, next) => {
                     if (resDelete) {
                         await Amount.findByIdAndDelete(id)
                         //conceptLoaded = await Concept.findById(AmountLoaded.concept)
-                        populateConceptAmount(AmountLoaded.concept,res)
+                        populateConceptAmount(AmountLoaded.concept, res)
 
                     }
 

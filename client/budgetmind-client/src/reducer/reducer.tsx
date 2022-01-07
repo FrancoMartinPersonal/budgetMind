@@ -20,12 +20,12 @@ const initialState = {
             user: ''
         }
     },
-    list:[],
-    create:{
-        msg:undefined,
-        err:undefined
+    list: [],
+    create: {
+        msg: undefined,
+        err: undefined
     },
-    showConcept:{
+    showConcept: {
 
     }
 
@@ -41,7 +41,7 @@ interface StateInterface {
     validate: InterfaceValidate;
     auth: InterfaceAuth;
     create: InterfaceCreate,
-    showConcept:any;
+    showConcept: any;
 
 
 }
@@ -73,21 +73,31 @@ export default function reducer(state: StateInterface = initialState, action: Ac
                 ...state,
                 list: action.payload
             }
-            case ActionType.CREATE:
+        case ActionType.CREATE:
             return {
                 ...state,
                 create: action.payload
             }
-            case ActionType.SHOWCONCEPT:
+        case ActionType.ADDAMOUNT:
             return {
                 ...state,
                 showConcept: action.payload
             }
-            case ActionType.DELETEAMOUNT:
-                return {
-                    ...state,
-                    showConcept: action.payload
-                }
+        case ActionType.SHOWCONCEPT:
+            return {
+                ...state,
+                showConcept: action.payload
+            }
+        case ActionType.DELETEAMOUNT:
+            return {
+                ...state,
+                showConcept: action.payload
+            }
+            case ActionType.ERASESAVEINFO:
+            return {
+                ...state,
+                create: action.payload
+            }
         default: return state
     }
 

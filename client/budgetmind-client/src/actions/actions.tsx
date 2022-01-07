@@ -19,7 +19,8 @@ interface CreateActionInterface {
 
 interface AddAmountActionInterface {
     amount:number,
-    id:string
+    id:string,
+    date:any
 }
 
 export const LoginAction = (data: LoginActionInterface) => {
@@ -156,7 +157,17 @@ export const CheckListAction = (token: string | undefined | null) => {
         })
     }
 }
-
+export const EraseSaveInfo = () => {
+    return (dispatch: Dispatch) => {
+        dispatch({
+            type: ActionType.CREATE,
+            payload: {
+                msg: undefined,
+                err: undefined
+            },
+        }) 
+    } 
+}
 export const CreateAction = (token: string | undefined | null, create: CreateActionInterface) => {
     console.log(JSON.stringify(create))
 
@@ -183,7 +194,7 @@ export const CreateAction = (token: string | undefined | null, create: CreateAct
     }
 }
 
-export const AddAmountAction = (token:string,props:AddAmountActionInterface) => {
+export const AddAmountAction = (token:string|null,props:AddAmountActionInterface) => {
     return (dispatch: Dispatch) => {
         fetch('http://localhost:3001/concept/addAmount', {
             method: 'POST',
@@ -199,14 +210,14 @@ export const AddAmountAction = (token:string,props:AddAmountActionInterface) => 
         }).then(res => {
             console.log(res)
             dispatch({
-                type: ActionType.CREATE,
+                type: ActionType.ADDAMOUNT,
                 payload: res
             })
         })
     
     }
 }
-export const DeleteAmountAction = (token:string,id:string) => {
+export const DeleteAmountAction = (token:string|null,id:string|null) => {
     return (dispatch: Dispatch) => {
         fetch('http://localhost:3001/concept/deleteAmount/'+id, {
             method: 'DELETE',
@@ -222,7 +233,7 @@ export const DeleteAmountAction = (token:string,id:string) => {
         }).then(res => {
             console.log(res)
             dispatch({
-                type: ActionType.CREATE,
+                type: ActionType.DELETEAMOUNT,
                 payload: res
             })
         })

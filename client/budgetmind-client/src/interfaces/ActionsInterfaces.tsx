@@ -29,8 +29,12 @@ interface Create{
  type:ActionType.CREATE,
  payload:InterfaceCreate
 }
+interface EraseSaveInfo {
+    type:ActionType.ERASESAVEINFO
+    payload:InterfaceCreate
+}
 interface AddAmount {
-type:ActionType.LIST
+type:ActionType.ADDAMOUNT
 payload:InterfaceConcept
 }
 
@@ -42,5 +46,5 @@ interface deleteAmount {
     type:ActionType.DELETEAMOUNT
     payload:InterfaceConcept
 }
-
-export type ActionInterfaces = Validate | Auth | Register | List | Create | AddAmount | showConcept | deleteAmount
+export type ActionInterfaces = Validate | Auth | Register
+ | List | Create | AddAmount | showConcept | deleteAmount | EraseSaveInfo

@@ -8,6 +8,7 @@ export enum ActionType {
     ADDAMOUNT = 'AddAmount',
     DELETEAMOUNT = 'DeleteAmount',
     SHOWCONCEPT= 'showConcept',
+    ERASESAVEINFO = 'eraseSaveInfo'
 }
 
 export interface InterfaceLogin {
