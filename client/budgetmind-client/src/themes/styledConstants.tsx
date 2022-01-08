@@ -7,6 +7,9 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 margin:10px 30px;
+@media (max-width: 768px) {
+     flex-direction: column;
+    }
 `
 export const LoginDiv = styled.div`
 width: 350px;
