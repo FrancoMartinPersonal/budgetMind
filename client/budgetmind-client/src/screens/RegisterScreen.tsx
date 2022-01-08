@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { authRedirect } from '../components/Auth';
 import useLog from '../hooks/useLog';
-import { ButtonSend, ErrorMessage, FormSend, LoginDiv, LoginInput, LoginMainText, LoginTag, LoginTagInputDiv, MainDiv, RegisterText, RegisterDiv, RegisterLink } from '../themes/styledConstants';
+import { ButtonSend, ErrorMessage, 
+    FormSend, LoginDiv, LoginInput,
+     LoginMainText, LoginTag, LoginTagInputDiv,
+      RegisterText, RegisterDiv, RegisterLink } from '../themes/styledConstants';
 import { useNavigate } from 'react-router-dom';
 import { loadCookie, saveCookie } from '../components/Cookies';
 import { useDispatch } from 'react-redux';
@@ -14,7 +17,7 @@ import { onSendErrorRegister } from '../components/ErrorManager';
 function RegisterScreen() {
     const { tokenLog, tokenMsgLog, authLog, authInfoLog, authILoginLog } = useLog()
     const navigate = useNavigate()
-    let tokenLoaded = loadCookie('token')
+   
     const dispatch = useDispatch()
     const { ValidateAction,RegisterAction } = bindActionCreators(allActions, dispatch)
     const [state, setState] = useState({
@@ -28,8 +31,9 @@ function RegisterScreen() {
 
     
     useEffect(() => {
+        let tokenLoaded = loadCookie('token')
         ValidateAction(tokenLoaded)
-        console.log(tokenLoaded)
+       
         return () => {
 
         }
@@ -39,11 +43,11 @@ function RegisterScreen() {
             alert("you're already login, log out if you want to register")
             navigate("/")
         }
-        console.log(authLog)
+      
     }, [authLog])
     useEffect(() => {
         let tokenRes = saveCookie({ name: 'token', value: tokenLog, time: 30 })
-        console.log(tokenRes)
+      
         ValidateAction(tokenRes)
         if(tokenMsgLog){
             setErr(tokenMsgLog)
@@ -59,6 +63,7 @@ function RegisterScreen() {
 
 
     const onChangeInputs = (e: any) => {
+        setErr(undefined)
         setState({
             ...state,
             [e.target.name]: e.target.value
@@ -67,20 +72,21 @@ function RegisterScreen() {
 
     }
     const OnFormSend = (e:any) => {
-        setErr(undefined)
         e.preventDefault()
         onSendErrorRegister(state,setErr)
         if(!err){
+            console.log(err)
         // heres the reducer to send to back
             RegisterAction({
                 user:state.user,
                 mail:state.mail,
-                password:state.password
+                password:state.password,
+                password2:state.password2
             })
         }
 
     }
-    console.log(state)
+    
     return (
         <MainDivRegister>
             <LoginDiv>

@@ -10,6 +10,12 @@ interface LoginActionInterface {
     mail: string,
     user: string
 }
+interface RegisterActionInterface {
+    password: string,
+    password2: string,
+    mail: string,
+    user: string
+}
 
 interface CreateActionInterface {
     concept: string,
@@ -91,7 +97,7 @@ export const ValidateAction = (token: string | undefined | null) => {
 
 }
 
-export const RegisterAction = (data: LoginActionInterface) => {
+export const RegisterAction = (data: RegisterActionInterface) => {
     let stringified = JSON.stringify(data)
     console.log(stringified, 'data in RegisterAction')
 

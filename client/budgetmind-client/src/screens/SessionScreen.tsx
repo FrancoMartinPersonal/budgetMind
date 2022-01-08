@@ -15,6 +15,7 @@ function SessionScreen() {
     const [des, setDes] = useState<Boolean>(false)
     const navigate = useNavigate()
     let cookieloaded = loadCookie("token")
+
     useEffect(() => {
         ValidateAction(cookieloaded)
         return () => {
@@ -85,7 +86,7 @@ const DropDowner = styled.div`
 position:absolute;
 top:50px;
 right:15px;
-height:fit-content
+height:fit-content;
 display:flex;
 justify-content:center;
 align-items:center;

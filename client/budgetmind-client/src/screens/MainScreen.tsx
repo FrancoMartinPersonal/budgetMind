@@ -15,7 +15,7 @@ function MainScreen() {
     const { LoginAction, ValidateAction } = bindActionCreators(allActions, dispatch)
 
 
-    let cookieloaded = loadCookie("token")
+  
     // useEffect(() => {
     //     ValidateAction(cookieloaded)
     //     return () => {
@@ -23,10 +23,12 @@ function MainScreen() {
     //     }
     // }, [cookieloaded])
     useEffect(() => {
+        let cookieloaded = loadCookie("token")
         console.log(cookieloaded, 'use eff cookloa')
         if (cookieloaded) ValidateAction(cookieloaded)
     }, [])
     useEffect(() => {
+        let cookieloaded = loadCookie("token")
         if (!cookieloaded) {
         let tokenRes = saveCookie({ name: 'token', value: tokenLog, time: 30 })
         console.log(tokenRes)

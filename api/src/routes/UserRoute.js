@@ -58,10 +58,10 @@ async function loginFun(req, res) {
 
 router.get('/validate', (req, res, next) => {
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
-        try{
+        try {
 
             if (err || !user) {
-    
+
                 console.log(info)
                 return res.status(400).send({
                     info,
@@ -69,9 +69,9 @@ router.get('/validate', (req, res, next) => {
                 })
             } else {
                 console.log(info)
-    
+
                 let userloaded = await user
-    
+
                 console.log(userloaded)
                 return res.send({
                     login: {
@@ -83,7 +83,7 @@ router.get('/validate', (req, res, next) => {
                     auth: true
                 })
             }
-        }catch(err){
+        } catch (err) {
             next(err)
         }
     })(req, res, next)
@@ -103,47 +103,77 @@ router.post('/register', async (req, res, next) => {
     try {
 
         console.log(req.body)
-        const { user, mail, password } = req.body
-        if (user && mail && password) {
-            const userRes = await User.findOne({
-                user
-            })
-            const mailRes = await User.findOne({
-                mail
-            })
+        const { user, mail, password, password2 } = req.body
+        if (user && mail && password && password2) {
 
-            if (userRes) {
-
-              res.status(404).send({
-
-                    msg: 'the user is already register'
-
-                })
-
-            } else if (mailRes) {
-             res.status(404).send({
-
-                    msg: 'the mail is already register'
-
-                })
+            let errors
+            if (user.length > 19 || user.length < 4) {
+                errors = 'the username must be between 4 and 19 characters'
+                console.log(user.length)
             }
-            else {
+            if (mail.length < 8) {
+                errors = 'insert a valid mail'
+            }
+            if (!mail.includes('@')) {
+                errors = 'the mail must contain @ '
+            }
+            if (password !== password2) {
+                errors = 'the password must be the same'
+            } if (password.length < 4 || password.length > 30) {
+                errors = 'the password must be between 6 and 30 characters'
+            }
+            if (user.length == 0 || mail.length == 0 || password.length == 0 || password2.length == 0) {
+                errors = 'fields are missing'
+            }
+            if (errors) {
+                res.status(404).send({
 
-                let passhash = await bcryptjs.hash(password.toString(), 10)
+                    msg: errors
 
-                const usera = new User({
-                    user: user,
-                    mail: mail,
-                    password: passhash
                 })
-                console.log(passhash)
-                const userSaved = await usera.save()
-                console.log(userSaved)
-                loginFun(req, res)
-                //compare = await bcryptjs.compare(password,userSaved.password)
+            }else{
+
+
+                const userRes = await User.findOne({
+                    user
+                })
+                const mailRes = await User.findOne({
+                    mail
+                })
+
+                if (userRes) {
+
+                    res.status(404).send({
+
+                        msg: 'the user is already register'
+
+                    })
+
+                } else if (mailRes) {
+                    res.status(404).send({
+
+                        msg: 'the mail is already register'
+
+                    })
+                }
+                else {
+
+                    let passhash = await bcryptjs.hash(password.toString(), 10)
+
+                    const usera = new User({
+                        user: user,
+                        mail: mail,
+                        password: passhash
+                    })
+                    console.log(passhash)
+                    const userSaved = await usera.save()
+                    console.log(userSaved)
+                    loginFun(req, res)
+                    //compare = await bcryptjs.compare(password,userSaved.password)
 
 
 
+                }
             }
         } else {
             res.status(404).send({

@@ -30,7 +30,7 @@ export const onSendErrorRegister = (state:onSendErrorRegisterInterface,setErr:Re
         errors = 'fields are missing'
     }
 
-
+    console.log(errors)
     setErr(errors)
 }
 
