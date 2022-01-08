@@ -1,9 +1,10 @@
 export enum ActionType {
     LOGIN =  'login',
+    LOGOUT = 'logout',
     VALIDATE = 'validate',
     AUTH = 'auth',
     REGISTER = 'register',
-    LIST = 'list',
+    LIST = 'list',  
     CREATE ='create',
     ADDAMOUNT = 'AddAmount',
     DELETEAMOUNT = 'DeleteAmount',

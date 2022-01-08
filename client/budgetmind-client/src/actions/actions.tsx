@@ -56,15 +56,7 @@ export const LogoutAction = () => {
     //this action clean the reducer 
     return (dispatch: Dispatch) => {
         dispatch({
-            type: ActionType.VALIDATE,
-            payload: {
-                token: '',
-                msg: undefined
-            }
-        })
-        dispatch({
-            type: ActionType.AUTH,
-            payload: initialState
+            type: ActionType.LOGOUT
         })
     }
 }

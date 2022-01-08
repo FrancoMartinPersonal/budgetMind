@@ -1,4 +1,5 @@
 import { ActionType, InterfaceAuth, InterfaceLogin, InterfaceValidate, InterfaceList, InterfaceCreate, InterfaceConcept, InterfaceDelete } from '../constants/constants';
+import { StateInterface } from '../reducer/reducer';
 
 // interface Login {
 //     type:ActionType.LOGIN,
@@ -52,6 +53,9 @@ interface Delete {
     type:ActionType.DELETE
     payload:InterfaceDelete
 }
+interface Logout {
+    type:ActionType.LOGOUT
+}
 
-export type ActionInterfaces = Validate | Auth | Register
+export type ActionInterfaces = Validate | Auth | Register | Logout
  | List | Create | AddAmount | showConcept | deleteAmount | EraseSaveInfo | Delete

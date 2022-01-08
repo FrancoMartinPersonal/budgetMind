@@ -38,7 +38,7 @@ export const initialState = {
 }
 
 
-interface StateInterface {
+export interface StateInterface {
 
 
     list: any;
@@ -68,6 +68,10 @@ export default function reducer(state: StateInterface = initialState, action: Ac
                 ...state,
                 auth: action.payload
             }
+
+        case ActionType.LOGOUT:
+            return state = initialState
+            
         case ActionType.REGISTER:
             return {
                 ...state,
