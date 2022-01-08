@@ -9,10 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { MainDiv, ButtonSend } from '../themes/styledConstants';
 import useLog from '../hooks/useLog';
 import { loadCookie } from '../components/Cookies';
-import { CheckListAction } from '../actions/actions';
+
 import { createAction } from '@reduxjs/toolkit';
 import EditConcept from '../components/EditConcept';
 import { sumOfAmounts, dateNormalFormat } from '../functions/Functions';
+import { ActionType } from '../constants/constants';
 
 interface ConceptSendInterface {
     concept: string;
@@ -22,9 +23,9 @@ interface ConceptSendInterface {
 }
 
 export default function HomeScreen() {
-    const { authILoginLog, listInfo, showConceptInfo, createInfo } = useLog()
+    const { authILoginLog, listInfo, showConceptInfo, createInfo,deleteInfo } = useLog()
     const dispatch = useDispatch()
-    const { CheckListAction, ValidateAction, CreateAction, ShowConcept,EraseSaveInfo } = bindActionCreators(allActions, dispatch)
+    const { CheckListAction, ValidateAction, CreateAction,DeleteAction, ShowConcept,EraseSaveInfo } = bindActionCreators(allActions, dispatch)
     let cookieLoaded = loadCookie('token')
     const [edit, setEdit] = useState<boolean>(false)
     const [sendCon, setSendCon] = useState<ConceptSendInterface>({
@@ -42,14 +43,13 @@ export default function HomeScreen() {
     useEffect(() => {
         //in this instance, we already have a token. we need to bring it to us with an endpoint
         CheckListAction(cookieLoaded)
-    }, [createInfo, showConceptInfo])
+    }, [createInfo, showConceptInfo,deleteInfo])
 
-    const onDeleteConcepts = (e: any) => {
-        console.log(e)
+    const onDeleteConcepts = (id: string) => {
+        EraseSaveInfo(ActionType.DELETE)
+        DeleteAction(cookieLoaded,id)
     }
-    const onAddConcepts = (e: any) => {
-        console.log(e)
-    }
+   
     const onEditConcepts = (id: string) => {
         if (!edit) {
             setEdit(true)
@@ -89,7 +89,7 @@ export default function HomeScreen() {
 
 
         console.log(createToSend, 'create to send')
-        EraseSaveInfo()
+        EraseSaveInfo(ActionType.CREATE)
         CreateAction(cookieLoaded, createToSend)
     }
 
@@ -225,7 +225,7 @@ export default function HomeScreen() {
                             </ListRowDiv>)
 
                         })}
-
+                    <h3>{deleteInfo}</h3>
                     </ListDiv>
                 </AsideRig>
 

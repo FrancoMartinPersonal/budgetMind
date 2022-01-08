@@ -3,7 +3,7 @@ import { RootState } from "../store/store"
 import React from 'react';
 
 
-function useLog () {
+function useLog() {
 
     const selectorState = useSelector((e: RootState) => e.Log)
     const authLog = selectorState?.auth!.auth
@@ -14,6 +14,8 @@ function useLog () {
     const listInfo = selectorState.list
     const createInfo = selectorState.create.msg
     const createErr = selectorState.create.err
+    const deleteInfo = selectorState.delete.msg
+    const deleteErr = selectorState.delete.err
     const showConceptInfo = selectorState.showConcept
     return {
         authLog,
@@ -24,7 +26,9 @@ function useLog () {
         listInfo,
         createErr,
         createInfo,
-        showConceptInfo
+        showConceptInfo,
+        deleteInfo,
+        deleteErr
     }
 }
 export default useLog

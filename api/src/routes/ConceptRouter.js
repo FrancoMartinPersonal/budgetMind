@@ -113,23 +113,34 @@ router.delete('/delete/:id', async (req, res, next) => {
             } else {
                 if (id) {
                     const conceptLoaded = await Concept.findById(id)
-                    conceptLoaded.amounts.forEach(async(amount) => {
-        
-                            await Amount.findByIdAndDelete(amount)
-                        })
-                        let conceptDeleted =  await Concept.findByIdAndDelete(id)
+                    if (conceptLoaded) {
+                        if (conceptLoaded.amounts.length > 0) {
+                            conceptLoaded.amounts.forEach(async (amount) => {
+
+                                await Amount.findByIdAndDelete(amount)
+                            })
+                        }
+                        let conceptDeleted = await Concept.findByIdAndDelete(id)
                         if (conceptDeleted) {
-                            
+                            console.log(conceptLoaded)
                             return res.send({ msg: "delete it sucessfully!", err: false })
-    
+
                         } else {
-                            return res.status(400).send(
+                            return res.status(404).send(
                                 {
                                     msg: "a problem was ocurred trying to delete in database",
                                     err: true
                                 })
-    
+
                         }
+                    }else {
+                        return res.status(400).send({
+
+                            msg: "the Id Concept doesnt exist",
+                            err: true,
+    
+                        })
+                    }
                 } else {
                     return res.status(400).send({
 

@@ -8,7 +8,8 @@ export enum ActionType {
     ADDAMOUNT = 'AddAmount',
     DELETEAMOUNT = 'DeleteAmount',
     SHOWCONCEPT= 'showConcept',
-    ERASESAVEINFO = 'eraseSaveInfo'
+    ERASESAVEINFO = 'eraseSaveInfo',
+    DELETE= 'delete'
 }
 
 export interface InterfaceLogin {
@@ -30,7 +31,6 @@ export interface InterfaceConcept {
     __v:     number;
 }
 
-
 export interface InterfaceList {
     _id:      string;
     user:     string;
@@ -39,7 +39,7 @@ export interface InterfaceList {
     password: string;
     concepts: InterfaceConcept[];
     __v:      number;
-
+    
 }
 export interface InterfaceAuth {
     
@@ -49,9 +49,13 @@ export interface InterfaceAuth {
         message?:string| undefined
     },
     login?:InterfaceLogin| undefined
-
+    
 }
 export interface InterfaceCreate {
+    msg:string | undefined,
+    err:boolean | undefined;
+}
+export interface InterfaceDelete {
     msg:string | undefined,
     err:boolean | undefined;
 }

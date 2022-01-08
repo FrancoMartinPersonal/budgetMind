@@ -2,6 +2,7 @@ import { ActionInterfaces } from '../interfaces/ActionsInterfaces';
 import { Dispatch } from 'redux';
 import { ActionType, InterfaceLogin, InterfaceValidate, InterfaceAuth } from '../constants/constants';
 import { displayPartsToString } from 'typescript';
+import { initialState } from '../reducer/reducer';
 
 
 interface LoginActionInterface {
@@ -63,16 +64,7 @@ export const LogoutAction = () => {
         })
         dispatch({
             type: ActionType.AUTH,
-            payload: {
-                info: {},
-                auth: false,
-                login: {
-                    date: '',
-                    mail: '',
-                    id: '',
-                    user: ''
-                }
-            }
+            payload: initialState
         })
     }
 }
@@ -157,17 +149,19 @@ export const CheckListAction = (token: string | undefined | null) => {
         })
     }
 }
-export const EraseSaveInfo = () => {
+export const EraseSaveInfo = (TYPE:ActionType) => {
     return (dispatch: Dispatch) => {
         dispatch({
-            type: ActionType.CREATE,
+            type: ActionType.ERASESAVEINFO,
+            setType:TYPE,
             payload: {
                 msg: undefined,
                 err: undefined
-            },
+            }
         }) 
     } 
 }
+
 export const CreateAction = (token: string | undefined | null, create: CreateActionInterface) => {
     console.log(JSON.stringify(create))
 
@@ -188,6 +182,28 @@ export const CreateAction = (token: string | undefined | null, create: CreateAct
             console.log(res)
             dispatch({
                 type: ActionType.CREATE,
+                payload: res
+            })
+        })
+    }
+}
+
+export const DeleteAction = (token: string | null, id:string|null) => {
+ 
+    return (dispatch: Dispatch) => {
+        fetch('http://localhost:3001/concept/delete/'+id, {
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+            
+        }).then((res) => {
+            return res.json()
+        }).then(res => {
+            console.log(res)
+            dispatch({
+                type: ActionType.DELETE,
                 payload: res
             })
         })

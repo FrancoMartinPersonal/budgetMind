@@ -1,8 +1,8 @@
-import { ActionType, InterfaceLogin, InterfaceValidate, InterfaceAuth, InterfaceConcept, InterfaceCreate } from '../constants/constants';
+import { ActionType, InterfaceLogin, InterfaceValidate, InterfaceAuth, InterfaceConcept, InterfaceCreate, InterfaceDelete } from '../constants/constants';
 import { ActionInterfaces } from '../interfaces/ActionsInterfaces';
 
 
-const initialState = {
+export const initialState = {
 
 
     validate: {
@@ -25,6 +25,10 @@ const initialState = {
         msg: undefined,
         err: undefined
     },
+    delete: {
+        msg: undefined,
+        err: undefined
+    },
     showConcept: {
 
     }
@@ -41,6 +45,7 @@ interface StateInterface {
     validate: InterfaceValidate;
     auth: InterfaceAuth;
     create: InterfaceCreate,
+    delete: InterfaceDelete,
     showConcept: any;
 
 
@@ -93,10 +98,15 @@ export default function reducer(state: StateInterface = initialState, action: Ac
                 ...state,
                 showConcept: action.payload
             }
-            case ActionType.ERASESAVEINFO:
+        case ActionType.ERASESAVEINFO:
             return {
                 ...state,
-                create: action.payload
+                [action.setType]: action.payload
+            }
+        case ActionType.DELETE:
+            return {
+                ...state,
+                delete: action.payload
             }
         default: return state
     }
