@@ -7,8 +7,9 @@ import { dateNormalFormat, sumOfAmounts } from '../functions/Functions';
 import { loadCookie } from './Cookies';
 import { bindActionCreators } from 'redux';
 import { allActions } from '../actions';
-import { ButtonSend } from '../themes/styledConstants';
+import { ButtonSend, SendInput, EquisP } from '../themes/styledConstants';
 import { ShowConcept } from '../actions/actions';
+import { colors } from '../themes/Colors';
 
 interface AmountSendInterface {
     amount: number;
@@ -86,22 +87,22 @@ function EditConcept(props: any) {
                 <h3>
                     {showConceptInfo.concept}
                 </h3>
-                <Equis onClick={() => onCloseEdit()}>
+                <EquisP onClick={() => onCloseEdit()}>
                     X
-                </Equis>
+                </EquisP>
 
             </NameAndX>
             <AddAmountForm onSubmit={(e)=> onAddAmount(e)}>
-                <InputAmount type="number" name="amount" value={sendAmount.amount} onChange={(e:any)=> onChangeSendAmount(e)}>
-                </InputAmount>
-                <InputDate type="date" name="dateISO" value={sendAmount.dateISO} onChange={(e:any)=> onChangeSendAmount(e)}>
-                </InputDate>
+                <SendInput type="number" name="amount" value={sendAmount.amount} onChange={(e:any)=> onChangeSendAmount(e)}>
+                </SendInput>
+                <SendInput type="date" name="dateISO" value={sendAmount.dateISO} onChange={(e:any)=> onChangeSendAmount(e)}>
+                </SendInput>
                 <SelectType name="type" value={sendAmount.type} onChange={(e:any)=> onChangeSendAmount(e)}>
                     <option value="+">+</option>
                     <option value="-">-</option>
                 </SelectType>
-                <ButtonSend>send</ButtonSend>
             </AddAmountForm>
+                <ButtonSend>send</ButtonSend>
             <AmountsContainer>
                 {
                     showConceptInfo?.amounts?.map((amount: any) => {
@@ -114,9 +115,9 @@ function EditConcept(props: any) {
                                 <h6>
                                     {dateNormalFormat(amount.date)}
                                 </h6>
-                                <Equis onClick={() => onDeleteAmount(amount._id)}>
+                                <EquisP onClick={() => onDeleteAmount(amount._id)}>
                                     x
-                                </Equis>
+                                </EquisP>
                             </AmountsDiv>
 
 
@@ -141,7 +142,8 @@ function EditConcept(props: any) {
 
 const EditDiv = styled.div`
 //border:1px solid black;
-
+background: ${colors.secondary.light};
+padding: 4px;
 `
 const NameAndX = styled.div`
 padding:1px;
@@ -166,16 +168,19 @@ padding:1px;
 height:fit-content;
 display:flex;
 flex-direction: row;
-justify-content: space-around;
+
+@media (max-width: 768px) {
+    flex-direction: column;
+  }
+`
+const AddAmountDiv = styled.div `
+display:flex;
 @media (max-width: 768px) {
     flex-direction: column;
   }
 
+`
 
-`
-const Equis = styled.p`
-cursor:pointer;
-`
 const GeneralDate = styled.h3`
 text-align: center;
 color: #422;
@@ -187,7 +192,9 @@ const InputDate = styled.input`
 `
 
 const SelectType = styled.select`
-
+margin:0 5px;
+width: min-content;
+align-self: center;
 `
 const SendButton = styled.button`
 

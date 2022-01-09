@@ -6,7 +6,7 @@ import { allActions } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
-import { MainDiv, ButtonSend } from '../themes/styledConstants';
+import { MainDiv, ButtonSend, EquisP, SendInput } from '../themes/styledConstants';
 import useLog from '../hooks/useLog';
 import { loadCookie } from '../components/Cookies';
 
@@ -176,11 +176,11 @@ export default function HomeScreen() {
                 <MiddleDiv>
                     <CreateForm onSubmit={onSubmitSendConcepts}>
                         <CreateDiv>
-                            <CreateInput type="text" name="concept"
+                            <SendInput type="text" name="concept"
                                 onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.concept} />
-                            <CreateInput type="number" name="amount"
+                            <SendInput type="number" name="amount"
                                 onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.amount} />
-                            <CreateInput type="date" name="dateISO"
+                            <SendInput type="date" name="dateISO"
                                 onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.dateISO} />
                             <select name="type"
                                 onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.type} >
@@ -220,10 +220,10 @@ export default function HomeScreen() {
                                 <AmountNetoH6 >
                                     {sumOfAmounts(e.amounts)}
                                 </AmountNetoH6>
+                                <ButtonSend onClick={() => onEditConcepts(e._id)}>edit</ButtonSend>
                                 <EquisP onClick={() => onDeleteConcepts(e._id)}
                                 >x
                                 </EquisP>
-                                <button onClick={() => onEditConcepts(e._id)}>edit</button>
                             </ListRowDiv>)
 
                         })}
@@ -253,9 +253,13 @@ const ListDiv = styled.div`
  display:flex;
  justify-content: center;
 flex-direction:column;
+
 `
 const ListRowDiv = styled.div`
- border:1px solid black;
+align-items: center;
+ margin:15px 0;
+ background:${colors.secondary.light} ;
+ border-radius: 3px;
  padding:10px;
  display:flex;
  justify-content: center;
@@ -267,15 +271,16 @@ const ListRowDiv = styled.div`
 `
 
 const ConceptH6 = styled.p`
-    color:#333;
-    padding:0 10px;
+    
+    padding: 10px;
     font-size:18px;
     margin:2px;
     `
+
 const AmountNetoH6 = styled.p`
     color:#66698a;
     font-weight:800;
-    padding:0 10px;
+    padding: 10px;
     font-size:18px;
     margin:2px;
 `
@@ -304,22 +309,12 @@ const AmountH6 = styled.p`
 `
 
 const CreateDiv = styled.div`
-
+display: flex;
+justify-content: center;
+flex-wrap: wrap;
 padding:10px;
 `
-const CreateInput = styled.input`
-background-color: ${colors.primary.main};
-color:white;
-margin: 5px;
-width: 150px;
-padding: 4px;
-outline: none;
-border-radius: 3px;
-border: none;
-&:focus {
-    border-bottom: 4px solid olive;
-}
-`
+
 const CreateSend = styled.button`
 
 `
@@ -331,11 +326,7 @@ justify-content:center;
 border-radius: 2px;
 padding:10px;
 `
-const EquisP = styled.p`
-margin:0;
-cursor:pointer;
 
-`
 const AsideRig = styled.aside`
 
 `

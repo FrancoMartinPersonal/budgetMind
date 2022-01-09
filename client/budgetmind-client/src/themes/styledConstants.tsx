@@ -46,7 +46,7 @@ justify-content: center;
 align-items: center;
 height:30px;
 color:#ffffff;
-margin:0px auto;
+margin:10px auto;
 width: 100px;
 
   transition: all .2s ease-out;
@@ -112,4 +112,32 @@ transition: all .2s ease-out;
 export const ErrorMessage = styled.p`
 color:#c05421;
 text-align: center;
+`
+
+export const EquisP = styled.p`
+margin: 10px;
+color:white;
+height: min-content;
+width: min-content;
+padding: 3px 9px;
+border-radius:3px;
+background: ${colors.secondary.light};
+font-size: 13px;
+cursor:pointer;
+
+`
+
+export const SendInput = styled.input`
+background-color: ${colors.primary.light};
+color:${colors.primary.dark};
+align-self: center;
+margin: 5px;
+width: 140px;
+padding: 4px;
+outline: none;
+border-radius: 3px;
+border: none;
+&:focus {
+    border-bottom: 4px solid ${colors.primary.dark};
+}
 `
