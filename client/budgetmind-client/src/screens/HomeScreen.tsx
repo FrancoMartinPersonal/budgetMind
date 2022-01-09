@@ -14,6 +14,8 @@ import { createAction } from '@reduxjs/toolkit';
 import EditConcept from '../components/EditConcept';
 import { sumOfAmounts, dateNormalFormat } from '../functions/Functions';
 import { ActionType } from '../constants/constants';
+import { colors } from '../themes/Colors';
+import BudgetNew from '../components/BudgetNew';
 
 interface ConceptSendInterface {
     concept: string;
@@ -127,7 +129,7 @@ export default function HomeScreen() {
             [name]: e.target.value
         })
     }
-    const ListOfConcepts = () => {
+    const ListOfAmounts = () => {
         return (
             <div>
 
@@ -199,7 +201,7 @@ export default function HomeScreen() {
                     </div>
                     <ListDiv>
 
-                        {listInfo && <ListOfConcepts></ListOfConcepts>}
+                        {listInfo.length>0 ? <ListOfAmounts></ListOfAmounts>: <BudgetNew/>}
 
                     </ListDiv>
 
@@ -245,10 +247,11 @@ const GeneralDiv = styled.div`
 
 
 const ListDiv = styled.div`
- border:1px solid black;
+ //border:1px solid black;
  padding:10px;
  height:fit-content;
  display:flex;
+ justify-content: center;
 flex-direction:column;
 `
 const ListRowDiv = styled.div`
@@ -301,20 +304,32 @@ const AmountH6 = styled.p`
 `
 
 const CreateDiv = styled.div`
-border:1px solid black;
+
 padding:10px;
 `
 const CreateInput = styled.input`
-
+background-color: ${colors.primary.main};
+color:white;
+margin: 5px;
+width: 150px;
+padding: 4px;
+outline: none;
+border-radius: 3px;
+border: none;
+&:focus {
+    border-bottom: 4px solid olive;
+}
 `
 const CreateSend = styled.button`
 
 `
 const CreateForm = styled.form`
 display:flex;
+background-color:${colors.secondary.light};
 flex-direction:column;
 justify-content:center;
-border:1px solid black;
+border-radius: 2px;
+padding:10px;
 `
 const EquisP = styled.p`
 margin:0;

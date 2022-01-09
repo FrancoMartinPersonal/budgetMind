@@ -6,6 +6,7 @@ import { allActions } from '../actions';
 import { loadCookie, removeCookie } from '../components/Cookies';
 import useLog from '../hooks/useLog';
 import { useNavigate } from 'react-router-dom';
+import { colors } from '../themes/Colors';
 
 
 function SessionScreen() {
@@ -73,12 +74,14 @@ margin:5px 5px;
 `
 
 const DisplayDiv = styled.div`
-border:1px solid black;
+
+background-color: ${colors.primary.dark};
 position:absolute;
+
 right:25px;
 top:5px;
 display:flex;
-padding:5px;
+padding:7px;
 cursor:pointer;
 flex-direction:row;
 `
