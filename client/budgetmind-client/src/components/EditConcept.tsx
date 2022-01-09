@@ -20,7 +20,7 @@ interface AmountSendInterface {
 function EditConcept(props: any) {
     const { showConceptInfo } = useLog()
     const dispatch = useDispatch()
-    const { DeleteAmountAction,AddAmountAction } = bindActionCreators(allActions, dispatch)
+    const { DeleteAmountAction, AddAmountAction } = bindActionCreators(allActions, dispatch)
     console.log(showConceptInfo.concept)
 
     const [sendAmount, setSendAmount] = useState<AmountSendInterface>({
@@ -39,45 +39,45 @@ function EditConcept(props: any) {
         DeleteAmountAction(cookieTokenLoaded, id)
     }
 
-    const onChangeSendAmount= (e:any) => {
+    const onChangeSendAmount = (e: any) => {
         setSendAmount({
             ...sendAmount,
-        [e.target.name] : e.target.value
+            [e.target.name]: e.target.value
         })
         console.log(sendAmount)
     }
 
-    const onAddAmount = (e:any) => {
+    const onAddAmount = (e: any) => {
         e.preventDefault()
-         //make a err control
-         let AddAmountToSend = {
-            amount:sendAmount.amount,
-            id:showConceptInfo._id,
-            date:new Date(sendAmount.dateISO)
-    }
+        //make a err control
+        let AddAmountToSend = {
+            amount: sendAmount.amount,
+            id: showConceptInfo._id,
+            date: new Date(sendAmount.dateISO)
+        }
         if (sendAmount.type == "+") {
             let numberNeg = Number(sendAmount.amount)
             numberNeg = +numberNeg
-             AddAmountToSend = {
-                amount:numberNeg,
-                id:showConceptInfo._id,
-                date:new Date(sendAmount.dateISO)
+            AddAmountToSend = {
+                amount: numberNeg,
+                id: showConceptInfo._id,
+                date: new Date(sendAmount.dateISO)
             }
             console.log(numberNeg, 'number before')
         } else if (sendAmount.type == "-") {
             //let numberNeg = Number(-sendAmount.amount)
             let numberNeg = Number(sendAmount.amount)
             numberNeg = -numberNeg
-             AddAmountToSend = {
-                amount:numberNeg,
-                id:showConceptInfo._id,
-                date:new Date(sendAmount.dateISO)
-        }
+            AddAmountToSend = {
+                amount: numberNeg,
+                id: showConceptInfo._id,
+                date: new Date(sendAmount.dateISO)
+            }
             console.log(numberNeg, 'number before')
         }
-        
+
         console.log(AddAmountToSend)
-        AddAmountAction(cookieTokenLoaded,AddAmountToSend)
+        AddAmountAction(cookieTokenLoaded, AddAmountToSend)
     }
 
 
@@ -92,17 +92,20 @@ function EditConcept(props: any) {
                 </EquisP>
 
             </NameAndX>
-            <AddAmountForm onSubmit={(e)=> onAddAmount(e)}>
-                <SendInput type="number" name="amount" value={sendAmount.amount} onChange={(e:any)=> onChangeSendAmount(e)}>
-                </SendInput>
-                <SendInput type="date" name="dateISO" value={sendAmount.dateISO} onChange={(e:any)=> onChangeSendAmount(e)}>
-                </SendInput>
-                <SelectType name="type" value={sendAmount.type} onChange={(e:any)=> onChangeSendAmount(e)}>
-                    <option value="+">+</option>
-                    <option value="-">-</option>
-                </SelectType>
-            </AddAmountForm>
+            <AddAmountForm onSubmit={(e) => onAddAmount(e)}>
+                <AddAmountDiv>
+
+                    <SendInput type="number" name="amount" value={sendAmount.amount} onChange={(e: any) => onChangeSendAmount(e)}>
+                    </SendInput>
+                    <SendInput type="date" name="dateISO" value={sendAmount.dateISO} onChange={(e: any) => onChangeSendAmount(e)}>
+                    </SendInput>
+                    <SelectType name="type" value={sendAmount.type} onChange={(e: any) => onChangeSendAmount(e)}>
+                        <option value="+">+</option>
+                        <option value="-">-</option>
+                    </SelectType>
+                </AddAmountDiv>
                 <ButtonSend>send</ButtonSend>
+            </AddAmountForm>
             <AmountsContainer>
                 {
                     showConceptInfo?.amounts?.map((amount: any) => {
@@ -159,7 +162,7 @@ flex-direction: row;
 justify-content: space-around;
 
 `
-const AmountsContainer = styled.div `
+const AmountsContainer = styled.div`
 height:300px;
  overflow:auto;
 `
@@ -167,13 +170,10 @@ const AddAmountForm = styled.form`
 padding:1px;
 height:fit-content;
 display:flex;
-flex-direction: row;
+flex-direction: column;
 
-@media (max-width: 768px) {
-    flex-direction: column;
-  }
 `
-const AddAmountDiv = styled.div `
+const AddAmountDiv = styled.div`
 display:flex;
 @media (max-width: 768px) {
     flex-direction: column;
