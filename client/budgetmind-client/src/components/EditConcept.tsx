@@ -7,7 +7,7 @@ import { dateNormalFormat, sumOfAmounts } from '../functions/Functions';
 import { loadCookie } from './Cookies';
 import { bindActionCreators } from 'redux';
 import { allActions } from '../actions';
-import { ButtonSend, SendInput, EquisP } from '../themes/styledConstants';
+import { ButtonSend, SendInput, EquisP, SendSelect, ErrorMessage } from '../themes/styledConstants';
 import { ShowConcept } from '../actions/actions';
 import { colors } from '../themes/Colors';
 
@@ -84,6 +84,9 @@ function EditConcept(props: any) {
     return (
         <EditDiv>
             <NameAndX>
+                <div>
+
+                </div>
                 <h3>
                     {showConceptInfo.concept}
                 </h3>
@@ -99,25 +102,26 @@ function EditConcept(props: any) {
                     </SendInput>
                     <SendInput type="date" name="dateISO" value={sendAmount.dateISO} onChange={(e: any) => onChangeSendAmount(e)}>
                     </SendInput>
-                    <SelectType name="type" value={sendAmount.type} onChange={(e: any) => onChangeSendAmount(e)}>
+                    <SendSelect name="type" value={sendAmount.type} onChange={(e: any) => onChangeSendAmount(e)}>
                         <option value="+">+</option>
                         <option value="-">-</option>
-                    </SelectType>
+                    </SendSelect>
                 </AddAmountDiv>
                 <ButtonSend>send</ButtonSend>
             </AddAmountForm>
+            
             <AmountsContainer>
                 {
                     showConceptInfo?.amounts?.map((amount: any) => {
                         return (
 
                             <AmountsDiv key={amount._id}>
-                                <h6>
+                                <AmountH6>
                                     {amount.amount}
-                                </h6>
-                                <h6>
+                                </AmountH6>
+                                <AmountH6>
                                     {dateNormalFormat(amount.date)}
-                                </h6>
+                                </AmountH6>
                                 <EquisP onClick={() => onDeleteAmount(amount._id)}>
                                     x
                                 </EquisP>
@@ -128,17 +132,22 @@ function EditConcept(props: any) {
                     })
                 }
                 <AmountsDiv>
-                    <h6>
+                    <AmountH6>
                         total
-                    </h6>
-                    <h6>
+                    </AmountH6>
+                    <AmountH6>
                         {sumOfAmounts(showConceptInfo?.amounts)}
-                    </h6>
+                    </AmountH6>
                 </AmountsDiv>
                 <GeneralDate>
                     {dateNormalFormat(showConceptInfo.date)}
                 </GeneralDate>
             </AmountsContainer>
+            {showConceptInfo.msg?
+          
+                <ErrorMessage style={{maxWidth:'fit-content',alignSelf:'center'}}>{showConceptInfo.msg}</ErrorMessage>
+           
+            :null}
         </EditDiv>
     )
 }
@@ -151,17 +160,28 @@ padding: 4px;
 const NameAndX = styled.div`
 padding:1px;
 display:flex;
+align-items: center;
 flex-direction: row;
-justify-content: space-around;
+justify-content: space-between;
 `
 const AmountsDiv = styled.div`
 padding:1px;
+margin: 5px;
 height:fit-content;
 display:flex;
 flex-direction: row;
-justify-content: space-around;
+background-color: #c7c7c7;
+justify-content: space-between;
+align-items: center;
 
 `
+const AmountH6  = styled.h6 `
+margin: 0 10px;
+padding: 3px 9px;
+font-size: 15px;
+`
+
+
 const AmountsContainer = styled.div`
 height:300px;
  overflow:auto;

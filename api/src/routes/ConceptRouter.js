@@ -85,7 +85,7 @@ router.post('/create', async (req, res, next) => {
                 } else {
                     return res.status(400).send({
 
-                        msg: "there's no enough data",
+                        msg: "there's no enough data, please send it again but well.",
                         err: true,
 
                     })
@@ -226,7 +226,7 @@ router.post('/addAmount', async (req, res, next) => {
                 } else {
                     return res.status(400).send({
 
-                        msg: "there's no enough data",
+                        msg: "there's no enough data, please click edit and send it again but well",
                         err: true,
 
                     })

@@ -6,7 +6,7 @@ import { allActions } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
-import { MainDiv, ButtonSend, EquisP, SendInput } from '../themes/styledConstants';
+import { MainDiv, ButtonSend, EquisP, SendInput, SendSelect, SucessMessage, ErrorMessage } from '../themes/styledConstants';
 import useLog from '../hooks/useLog';
 import { loadCookie } from '../components/Cookies';
 
@@ -25,7 +25,7 @@ interface ConceptSendInterface {
 }
 
 export default function HomeScreen() {
-    const { authILoginLog, listInfo, showConceptInfo, createInfo,deleteInfo } = useLog()
+    const { authILoginLog, listInfo, showConceptInfo, createInfo,deleteInfo,createErr } = useLog()
     const dispatch = useDispatch()
     const { CheckListAction, ValidateAction, CreateAction,DeleteAction, ShowConcept,EraseSaveInfo } = bindActionCreators(allActions, dispatch)
     let cookieLoaded = loadCookie('token')
@@ -182,11 +182,11 @@ export default function HomeScreen() {
                                 onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.amount} />
                             <SendInput type="date" name="dateISO"
                                 onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.dateISO} />
-                            <select name="type"
+                            <SendSelect name="type"
                                 onChange={(e: any) => onChangeSendConcepts(e)} value={sendCon.type} >
                                 <option value="+">+</option>
                                 <option value="-">-</option>
-                            </select>
+                            </SendSelect>
 
                         </CreateDiv>
                         <ButtonSend>
@@ -195,9 +195,16 @@ export default function HomeScreen() {
 
                     </CreateForm >
                     <div>
-                        <h6>
-                            {createInfo}
-                        </h6>
+                        {
+                        createErr?
+                        <ErrorMessage>
+                        {createInfo}
+                    </ErrorMessage>
+                        :<SucessMessage>
+                        {createInfo}
+                    </SucessMessage>
+                        
+                        }
                     </div>
                     <ListDiv>
 
@@ -287,7 +294,7 @@ const AmountNetoH6 = styled.p`
 const WelcomeDiv = styled.div`
  padding:10px;
  height:fit-content;
- border:1px solid black;
+
 `
 
 const WelcomeH5 = styled.h5`

@@ -109,8 +109,12 @@ transition: all .2s ease-out;
     color:#4792a8;
 }
 `
-export const ErrorMessage = styled.p`
+export const ErrorMessage = styled.h4`
 color:#c05421;
+text-align: center;
+`
+export const SucessMessage = styled.h4`
+color:#21c06b;
 text-align: center;
 `
 
@@ -128,7 +132,7 @@ cursor:pointer;
 `
 
 export const SendInput = styled.input`
-background-color: ${colors.primary.light};
+background-color: ${colors.secondary.light};
 color:${colors.primary.dark};
 align-self: center;
 margin: 5px;
@@ -140,4 +144,11 @@ border: none;
 &:focus {
     border-bottom: 4px solid ${colors.primary.dark};
 }
+`
+export const SendSelect = styled.select `
+height: 30px;
+align-self: center;
+border:none;
+background-color: ${colors.secondary.light};
+color:${colors.primary.dark};
 `
